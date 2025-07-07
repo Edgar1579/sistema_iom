@@ -4,6 +4,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.conf import settings
 from django.conf.urls.static import static  # Importa static
+from base.views import principal
 
 # Vista para la página de inicio
 def home_view(request):
@@ -23,12 +24,13 @@ def reportes_view(request):
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', home_view, name='home'),  # Ruta para la página principal
+    path('', principal, name='index'),  # Ruta para la página principal
     path('registrar_horas/', registrar_horas_view, name='registrar_horas'),  # Ruta para registrar horas
     path('solicitar_permiso/', solicitar_permiso_view, name='solicitar_permiso'),  # Ruta para solicitar permiso
     path('reportes/', reportes_view, name='reportes'),  # Ruta para reportes
 ]
 
-# Solo para desarrollo: sirve archivos estáticos
+# Solo para desarrollo: sirve archivos estáticos y media
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)  # Esta línea faltaba

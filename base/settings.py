@@ -20,6 +20,7 @@ INSTALLED_APPS = [
     'clasificacion',
     'comunidad',
     'operaciones',
+    'configuracion',
     'django_bootstrap5',  # pip install django-bootstrap5
     'crispy_forms',  # pip install django-crispy-forms
     'django_bootstrap_icons',  # pip install django-bootstrap-icons
@@ -96,9 +97,9 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),  # Asegúrate de que esta línea esté presente
 ]
 
-# Media files
-MEDIA_URL = "/media/"
-MEDIA_ROOT = os.path.join(BASE_DIR, "media/")  # Sin la barra diagonal al final
+# Configuración de archivos media
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
