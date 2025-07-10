@@ -9,5 +9,10 @@ def principal(request):
     }
     return render(request, "index.html", context)
    
-    def home_view(request):
-       return render(request, 'partials/home.html')
+def principal_admin(request):
+    titulo="Bienvenido"
+    context={
+        "titulo": titulo,
+        
+    }
+    return render(request, "index-admin.html", context)   

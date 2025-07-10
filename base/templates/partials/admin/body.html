@@ -1,0 +1,81 @@
+{% load django_bootstrap5 %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    {{ form.media.css }}
+
+
+
+    <link rel="stylesheet" href="{% static 'css/adminlte.min.css' %}">
+
+    {% comment %} <!- para las tablas ->
+    <link href="{% static 'DataTables/datatables.min.css' %}" rel="stylesheet">
+    <link href="{% static 'DataTables/DateTime/dataTables.dateTime.min.css' %}" rel="stylesheet">
+    <link href="{% static 'DataTables/DateTime/jquery.dataTables.min.css' %}" rel="stylesheet"> 
+    <link href="{% static 'DataTables/Responsive-2.5.0/css/jquery.dataTables.min.css' %}" rel="stylesheet">
+
+
+    <!- para las alertas ->
+    <link href="{% static 'Toastr/css/toastr.min.css' %}" rel="stylesheet">
+
+
+    <title>In Out Manager - {{titulo}}</title>
+
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+    
+    <!- para Select2 ->
+    <link href="{% static 'Select2/select2.css' %}" rel="stylesheet"> {% endcomment %}
+
+
+    <link rel="shortcut icon" href="{% static 'img/Logo.png' %}"
+    type="image/x-icon">
+</head>
+<body class="hold-transition dark-mode sidebar-mini layout-fixed
+layout-navbar-fixed layout-footer-fixed">
+{% include 'partials/admin/header.html' %}
+{% include 'partials/admin/sidebar.html' %}
+     <!-- Content Wrapper. Contains page content -->
+     <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1 class="m-0">{{titulo}} </h1>
+                    </div><!-- /.col -->
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="{% url
+                                    'index' %}">Inicio</a></li>
+                            <li class="breadcrumb-item active">{{titulo}}
+                            </li>
+                        </ol>
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- /.content-header -->
+        <section class="content">
+            <div class="container-fluid">
+                {% block contenido %}
+
+                {% endblock contenido %}
+            </div>
+        </section>
+    </div>
+
+    {% include 'partials/admin/footer.html' %}
+
+
+ 
+
+</div>
+        
+</body>
+</html>

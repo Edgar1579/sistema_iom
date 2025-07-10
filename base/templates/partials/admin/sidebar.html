@@ -1,0 +1,114 @@
+{% load static %}
+{% load bootstrap_icons %}
+
+<!-- Main Sidebar Container -->
+<aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <!-- Brand Logo -->
+    <a href="{% url 'index' %}" class="brand-link decoration-none ">
+      <img src="{% static 'img/Logo.png' %}" alt="IOM Logo" class=" img-circle elevation-3 " width="50" style="opacity: .8">
+      <img src="{% static 'img/Titulo.png' %}" width="150" alt="AdminLTE Titulo" >
+    </a>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <!-- Sidebar user panel (optional) -->
+      <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+        <div class="image">
+          <img src="{{MEDIA_URL}}{{image_user}}" class="img-circle elevation-2" alt="User Image">
+        </div>
+        <div class="info">
+          <a href="#" class="d-block">{{usuario_actual.first_name}} {{usuario_actual.last_name}}</a>
+        </div>
+      </div>
+
+      <!-- SidebarSearch Form -->
+      <div class="form-inline">
+        <div class="input-group" data-widget="sidebar-search">
+          <input class="form-control form-control-sidebar" type="search" placeholder="Buscar..." aria-label="Buscar">
+          <div class="input-group-append">
+            <button class="btn btn-sidebar">
+              {% bs_icon 'search' %}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidebar Menu -->
+      <nav class="mt-2">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+          <!-- Add icons to the links using the .nav-icon class
+               with font-awesome or any other icon font library -->
+          <li class="nav-item menu-close">
+            <a href="#" class="nav-link ">
+              {% bs_icon 'people' %}
+              <i class="bi bi-people-fill"></i>
+              <p>
+                Comunidad
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                 <a href="" class="nav-link" data-url=""> 
+                  {% bs_icon 'person' %}
+                  <p>Usuarios</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="" class="nav-link" data-url="">
+                  {% bs_icon 'shop' %}
+                  <p>Tiendas</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+          
+      
+          <li class="nav-item menu-close">
+            <a href="#" class="nav-link ">
+              {% bs_icon 'megaphone-fill' %}
+              <p>
+                Operaciones
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="" class="nav-link" data-url="">
+                  {% bs_icon 'box-seam-fill' %}
+                  <p>Productos</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="" class="nav-link" data-url="">
+                  {% bs_icon 'basket-fill' %}
+                  <p>Pedidos</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+          
+        
+        <li class="nav-item menu-close">
+          <a href="#" class="nav-link ">
+            {% bs_icon 'gear-wide-connected' %}
+            <p>
+              Configuraciones
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="" class="nav-link" data-url="">
+                {% bs_icon 'card-image' %}
+                <p>Sliders</p>
+              </a>
+            </li>
+            
+          </ul>
+        </li>
+      </ul>
+      </nav>
+      <!-- /.sidebar-menu -->
+    </div>
+    <!-- /.sidebar -->
+  </aside>
+     <!-- script para ventana activa -->
+  
