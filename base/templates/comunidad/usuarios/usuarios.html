@@ -1,0 +1,118 @@
+{% extends 'partials/admin/body.html' %}
+{% load crispy_forms_tags %}
+{% load bootstrap_icons %}
+
+{% block contenido %}
+
+
+<!-- Toast de mensajes Django -->
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 9999">
+  <div id="toast-container">
+    {% if messages %}
+      {% for message in messages %}
+        <div class="toast align-items-center text-bg-{{ message.tags }} border-0 show" role="alert" aria-live="assertive" aria-atomic="true">
+          <div class="d-flex">
+            <div class="toast-body">
+              {{ message }}
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Cerrar"></button>
+          </div>
+        </div>
+      {% endfor %}
+    {% endif %}
+  </div>
+</div>
+
+<div class="container-fluid m-4 row">
+  <div class="rounded card p-3 col-md-3">
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      <h5 class="mb-3">{{ accion }} {{ titulo }}</h5>
+      {{ form|crispy }}
+      <input class="btn btn-success mt-3" type="submit" value="{{ accion }} {{ titulo }}">
+    </form>
+  </div>
+
+  <div class="rounded card p-3 mx-4 col-md-8">
+    <h5>Lista de Usuarios</h5>
+     <table class="table table-bordered w-100 display nowrap" id="tabla-usuarios">
+        <thead>
+          <tr>
+            <th>Imagen</th>
+            <th>Primer Nombre</th>
+            <th>Segundo Nombre</th>
+            <th>Primer Apellido</th>
+            <th>Segundo Apellido</th>
+            <th>Fecha de Nacimiento</th>
+            <th>Rol</th>
+            <th>Tipo de Documento</th>
+            <th>Documento</th>
+            {% if perms.comunidad.change_usuario %}
+            <th>Accion</th>
+            {% endif %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for usuario in usuarios %}
+            {% if usuario.estado %}
+              <tr>
+                <td>
+                  <img src="{{ usuario.imagen.url }}" class="img-circle elevation-2" alt="User Image" width="60" />
+                </td>
+                <td>{{ usuario.primer_nombre }}</td>
+                <td>{{ usuario.segundo_nombre }}</td>
+                <td>{{ usuario.primer_apellido }}</td>
+                <td>{{ usuario.segundo_apellido }}</td>
+                <td>{{ usuario.fecha_nacimiento }}</td>
+                <td>{{ usuario.user.groups.first }}</td>
+                <td>{{ usuario.get_tipo_documento_display }}</td>
+                <td>{{ usuario.documento }}</td>
+                {% if perms.comunidad.change_usuario %}
+                <td>
+                  
+                  <!-- Botón que abre el modal -->
+<button type="button"
+        class="btn btn-danger"
+        data-bs-toggle="modal"
+        data-bs-target="#staticBackdrop{{ usuario.id }}"
+        title="Eliminar {{ usuario.primer_nombre }} {{ usuario.primer_apellido }}"
+        data-bs-toggle="tooltip">
+  {% bs_icon 'trash' %}
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop{{ usuario.id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel{{ usuario.id }}" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel{{ usuario.id }}">
+          ¿Estás seguro de eliminar a <strong>{{ usuario.primer_nombre }} {{ usuario.primer_apellido }}</strong>?
+        </h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        Una vez eliminado, <strong>{{ usuario.primer_nombre }} {{ usuario.primer_apellido }}</strong> no podrá recuperarse.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <a href="{% url 'usuario-eliminar' usuario.id %}" class="btn btn-danger">¡Eliminar!</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+                  
+
+                  <a href="" class="btn btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar">{% bs_icon 'pencil' %}</a>
+                
+                </td>
+                {% endif %}
+              </tr>
+            {% endif %}
+          {% endfor %}
+        </tbody>
+      </table>
+  </div>
+</div>
+
+{% endblock %}

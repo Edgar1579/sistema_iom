@@ -3,6 +3,7 @@ from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 
+
 def get_image_filename(instance, filename):
     ext = filename.split('.')[-1]
     filename = f"{instance.documento}.{ext}"
@@ -10,20 +11,15 @@ def get_image_filename(instance, filename):
 
 # Create your models here.
 class Usuario(models.Model):
-    primer_nombre = models.CharField(max_length=45, verbose_name="Primer Nombre")
-    segundo_nombre = models.CharField(max_length=45, verbose_name="Segundo Nombre", blank=True, null=True)
-    primer_apellido = models.CharField(max_length=45, verbose_name="Primer Apellido")
-    segundo_apellido = models.CharField(max_length=45, verbose_name="Segundo Apellido")
+    primer_nombre= models.CharField(max_length=45,verbose_name="Primer Nombre")
+    segundo_nombre= models.CharField(max_length=45,verbose_name="Segundo Nombre", blank=True,null=True)
+
+    primer_apellido= models.CharField(max_length=45,verbose_name="Primer Apellido")
+    segundo_apellido= models.CharField(max_length=45,verbose_name="Segundo Apellido")
     
-    fecha_nacimiento = models.DateField(verbose_name="Fecha de Nacimiento")
-    imagen = models.ImageField(
-        upload_to=get_image_filename, 
-        blank=True, 
-        null=True, 
-        default="comunidad/default-user.jpeg",
-        verbose_name="Imagen de Perfil"
-    )
-    correo = models.EmailField(max_length=50, verbose_name="Correo", unique=True)
+    fecha_nacimiento= models.DateField(verbose_name="Fecha de Nacimiento")
+    imagen = models.ImageField(upload_to=get_image_filename, blank=True, null=True,default="comunidad\default-user.jpeg")
+    correo = models.EmailField(max_length=50, verbose_name="Correo")
     
     class TipoDocumento(models.TextChoices):
         CEDULA = 'CC', _("Cédula")
@@ -49,7 +45,7 @@ class Usuario(models.Model):
         verbose_name="Rol"
     )
     
-    user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name="Usuario Django")
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     estado = models.BooleanField(default=True, verbose_name="Estado Activo")
     
     # Campos específicos por rol
@@ -246,17 +242,17 @@ class Usuario(models.Model):
     def get_administradores():
         """Obtiene todos los administradores activos"""
         return Usuario.objects.filter(rol=Usuario.RolChoices.ADMINISTRADOR, estado=True)
-    
+
     @staticmethod
     def get_empleados():
         """Obtiene todos los empleados activos"""
         return Usuario.objects.filter(rol=Usuario.RolChoices.EMPLEADO, estado=True)
-    
+
     @staticmethod
     def get_recursos_humanos():
         """Obtiene todos los usuarios de recursos humanos activos"""
         return Usuario.objects.filter(rol=Usuario.RolChoices.RECURSOS_HUMANOS, estado=True)
-    
+
     @staticmethod
     def get_usuarios_por_departamento(departamento):
         """Obtiene usuarios por departamento"""

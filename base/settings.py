@@ -23,7 +23,8 @@ INSTALLED_APPS = [
     'configuracion',
     'django_bootstrap5',  # pip install django-bootstrap5
     'crispy_forms',  # pip install django-crispy-forms
-    'django_bootstrap_icons',  # pip install django-bootstrap-icons
+    'django_bootstrap_icons',# pip install django-bootstrap-icons
+    'crispy_bootstrap5', #pip install crispy-bootstrap5
 ]
 
 

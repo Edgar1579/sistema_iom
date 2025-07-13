@@ -1,26 +1,59 @@
-# views.py actualizado para tu aplicación de registro de horario
 from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from .models import Empleado, RegistroHoras, Permiso  # Asegúrate de que estos modelos existan en models.py
+from django.contrib.auth.models import User
+from django.contrib.auth.hashers import make_password
+from django.contrib import messages
+from comunidad.models import Usuario
+from comunidad.forms import UsuarioForm
 
-def home(request):
-    return render(request, 'base/home.html')
+def usuario_crear(request):
+    titulo = "Usuario"
+    accion = "Agregar"
+    usuarios = Usuario.objects.all()
 
-@login_required
-def registrar_horas(request):
-    if request.method == 'POST':
-        # Lógica para procesar el registro de horas
-        pass
-    return render(request, 'base/registro_horas.html')
+    if request.method == "POST":
+        form = UsuarioForm(request.POST, request.FILES)
+        if form.is_valid():
+            documento = request.POST['documento']
+            correo = request.POST['correo']
+            primer_nombre = request.POST['primer_nombre']
+            primer_apellido = request.POST['primer_apellido']
 
-@login_required
-def solicitar_permiso(request):
-    if request.method == 'POST':
-        # Lógica para procesar solicitud de permiso
-        pass
-    return render(request, 'base/solicitud_permiso.html')
+            # Crear el usuario de Django si no existe
+            user = User.objects.filter(username=documento).first()
+            if not user:
+                user = User.objects.create_user(
+                    username=documento,
+                    email=correo,
+                    password=make_password(
+                        "@" + primer_nombre[0] + primer_apellido[0] + documento[-4:]
+                    )
+                )
+                user.first_name = primer_nombre
+                user.last_name = primer_apellido
+                user.save()
 
-@login_required
-def reportes(request):
-    # Lógica para generar reportes
-    return render(request, 'base/reportes.html')
+            # Guardar el Usuario personalizado
+            usuario = form.save(commit=False)
+            usuario.user = user
+            usuario.save()
+
+            messages.success(request, "Usuario creado exitosamente.")
+            return redirect('usuarios')
+        else:
+            messages.error(request, "Formulario inválido.")
+    else:
+        form = UsuarioForm()
+
+    context = {
+        "titulo": titulo,
+        "accion": accion,
+        "usuarios": usuarios,
+        "form": form,
+    }
+    return render(request, "comunidad/usuarios/usuarios.html", context)
+def usuario_eliminar(request, pk):
+    usuario = Usuario.objects.filter(id=pk)
+    usuario.update(estado=False)
+
+    messages.success(request, "Usuario eliminado correctamente.")
+    return redirect('usuarios')

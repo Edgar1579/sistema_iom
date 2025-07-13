@@ -1,0 +1,11 @@
+{% load static %}
+<script src="{% static 'js/jquery/jquery.min.js'%}"></script>
+<script src="{% static 'js/adminlte/adminlte.js'%}"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const toastElList = [].slice.call(document.querySelectorAll('.toast'));
+    toastElList.forEach(function (toastEl) {
+      new bootstrap.Toast(toastEl, { delay: 3000 }).show();
+    });
+  });
+</script>

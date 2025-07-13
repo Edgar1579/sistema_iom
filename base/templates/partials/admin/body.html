@@ -6,34 +6,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+    <title>In Out Manager - {{ titulo }}</title>
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+    {% load bootstrap_icons %}
+    <link rel="stylesheet" href="{% static 'css/adminlte.min.css' %}">
+    
     {{ form.media.css }}
 
 
-
-    <link rel="stylesheet" href="{% static 'css/adminlte.min.css' %}">
-
-    {% comment %} <!- para las tablas ->
-    <link href="{% static 'DataTables/datatables.min.css' %}" rel="stylesheet">
-    <link href="{% static 'DataTables/DateTime/dataTables.dateTime.min.css' %}" rel="stylesheet">
-    <link href="{% static 'DataTables/DateTime/jquery.dataTables.min.css' %}" rel="stylesheet"> 
-    <link href="{% static 'DataTables/Responsive-2.5.0/css/jquery.dataTables.min.css' %}" rel="stylesheet">
-
-
-    <!- para las alertas ->
-    <link href="{% static 'Toastr/css/toastr.min.css' %}" rel="stylesheet">
-
-
-    <title>In Out Manager - {{titulo}}</title>
-
-    {% bootstrap_css %}
-    {% bootstrap_javascript %}
-    
-    <!- para Select2 ->
-    <link href="{% static 'Select2/select2.css' %}" rel="stylesheet"> {% endcomment %}
-
-
-    <link rel="shortcut icon" href="{% static 'img/Logo.png' %}"
+    <link rel="shortcut icon" href="{% static 'images/logoiom.png' %}"
     type="image/x-icon">
 </head>
 <body class="hold-transition dark-mode sidebar-mini layout-fixed
@@ -71,7 +53,7 @@ layout-navbar-fixed layout-footer-fixed">
     </div>
 
     {% include 'partials/admin/footer.html' %}
-
+    {% include 'partials/admin/scripts.html' %}
 
  
 
