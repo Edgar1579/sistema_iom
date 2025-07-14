@@ -6,7 +6,7 @@
 
 
 <!-- Toast de mensajes Django -->
-<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 9999">
+<div class="position-fixed top-0 end-0 p-3" style="z-index: 9999">
   <div id="toast-container">
     {% if messages %}
       {% for message in messages %}
@@ -29,7 +29,8 @@
       {% csrf_token %}
       <h5 class="mb-3">{{ accion }} {{ titulo }}</h5>
       {{ form|crispy }}
-      <input class="btn btn-success mt-3" type="submit" value="{{ accion }} {{ titulo }}">
+      <input class="btn btn-success" type="submit" value="{{ accion }} {{ titulo }}" />
+          <a href="{% url 'usuarios' %}" class="btn btn-danger">Cancelar</a>
     </form>
   </div>
 
@@ -57,7 +58,7 @@
             {% if usuario.estado %}
               <tr>
                 <td>
-                  <img src="{{ usuario.imagen.url }}" class="img-circle elevation-2" alt="User Image" width="60" />
+                  <img src="{{ usuario.get_imagen_url }}" class="img-circle elevation-2" alt="User Image" width="60" />
                 </td>
                 <td>{{ usuario.primer_nombre }}</td>
                 <td>{{ usuario.segundo_nombre }}</td>
@@ -103,7 +104,7 @@
 
                   
 
-                  <a href="" class="btn btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar">{% bs_icon 'pencil' %}</a>
+                  <a href="{% url 'usuario-editar' usuario.id %}" class="btn btn-primary" data-bs-toggle="tooltip"  data-bs-placement="top" title="Editar{{ usuario.primer_nombre }} {{ usuario.primer_apellido }}">{% bs_icon 'pencil' %}</a>
                 
                 </td>
                 {% endif %}

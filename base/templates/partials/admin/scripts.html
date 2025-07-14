@@ -9,3 +9,102 @@
     });
   });
 </script>
+<!- para las tablas ->
+<script src="{% static 'DataTables/datatables.min.js' %}"></script>
+{% include 'partials/admin/datatables.html' %}
+<script>
+        $(document).ready(function () {
+            $('#tabla-usuarios').DataTable({
+                responsive: true,
+                dom: 'Bfrtip',
+                columnDefs: [
+                    { responsivePriority: 3, targets: 2 },
+                    { responsivePriority: 2, targets: 2 }
+                ],
+                buttons: ["copy", "csv", "excel", "pdf", "print", "colvis"],
+                language: {
+                    processing: "Procesando...",
+                    search: "Buscar:",
+                    lengthMenu: "Mostrar _MENU_ registros",
+                    info: "Mostrando registros del _START_ al _END_ de un total de _TOTAL_",
+                    infoEmpty: "Mostrando registros del 0 al 0 de un total de 0",
+                    infoFiltered: "(filtrado de un total de _MAX_ registros)",
+                    loadingRecords: "Cargando...",
+                    zeroRecords: "No se encontraron resultados",
+                    emptyTable: "Ningún dato disponible en esta tabla",
+                    paginate: {
+                        first: "Primero",
+                        previous: "Anterior",
+                        next: "Siguiente",
+                        last: "Último"
+                    },
+                    buttons: {
+                        copy: "copiar",
+                        pdf: "Exportar PDF",
+                        print: "Imprimir",
+                        copyTitle: 'Copiado al portapapeles',
+                        copySuccess: {
+                            _: '%d filas copiadas',
+                            1: '1 fila copiada'
+                        },
+                        colvis: 'Columnas visibles'
+                    },
+                    aria: {
+                        sortAscending: ": activar para ordenar de manera ascendente",
+                        sortDescending: ": activar para ordenar de manera descendente"
+                    }
+                }
+            }).buttons().container().appendTo('#tabla-usuarios_wrapper .col-md-6:eq(0)');
+        });
+    </script>
+
+
+
+<!- para las alertas ->
+<script src="{% static 'Toastr/js/toastr.min.js' %}"></script>
+ 
+<script>
+$(document).ready(function () {
+    $('#tabla-horas').homeble({
+        responsive: true,
+        dom: 'Bfrtip',
+        buttons: ["copy", "csv", "excel", "pdf", "print", "colvis"],
+        columnDefs: [
+            { responsivePriority: 1, targets: 0 },  // Usuario
+            { responsivePriority: 2, targets: -1 }  // Acciones
+        ],
+        language: {
+            processing: "Procesando...",
+            search: "Buscar:",
+            lengthMenu: "Mostrar _MENU_ registros",
+            info: "Mostrando registros del _START_ al _END_ de un total de _TOTAL_",
+            infoEmpty: "Mostrando registros del 0 al 0 de un total de 0",
+            infoFiltered: "(filtrado de un total de _MAX_ registros)",
+            loadingRecords: "Cargando...",
+            zeroRecords: "No se encontraron resultados",
+            emptyTable: "Ningún dato disponible en esta tabla",
+            paginate: {
+                first: "Primero",
+                previous: "Anterior",
+                next: "Siguiente",
+                last: "Último"
+            },
+            buttons: {
+                copy: "Copiar",
+                pdf: "Exportar PDF",
+                print: "Imprimir",
+                copyTitle: 'Copiado al portapapeles',
+                copySuccess: {
+                    _: '%d filas copiadas',
+                    1: '1 fila copiada'
+                },
+                colvis: 'Columnas visibles'
+            },
+            aria: {
+                sortAscending: ": activar para ordenar de manera ascendente",
+                sortDescending: ": activar para ordenar de manera descendente"
+            }
+        }
+    }).buttons().container().appendTo('#tabla-horas_wrapper .col-md-6:eq(0)');
+});
+</script>
