@@ -8,6 +8,8 @@ from comunidad.forms import UsuarioForm, UsuarioEditarForm, RegistroHorasForm
 
 
 
+
+
 def usuario_crear(request):
     titulo = "Usuario"
     accion = "Agregar"
@@ -115,19 +117,15 @@ def usuario_editar(request, pk):
     }
     return render(request, "comunidad/usuarios/usuarios.html", context)
 
-
-def registro_horas(request):
+def registrar_horas(request):
     if request.method == 'POST':
         form = RegistroHorasForm(request.POST)
         if form.is_valid():
             form.save()
-            messages.success(request, "Horas registradas exitosamente.")
-            return redirect('registro_horas:lista_horas')
         else:
-            messages.error(request, "Error al registrar horas.")
-    else:
-        form = RegistroHorasForm()
-    return render(request, 'comunidad/horas/registro_horas.html', {'form': form})
+         form = RegistroHorasForm()
+    return render(request, 'comunidad/horas/registro_horas.html')
+
 def lista_horas(request):
-    registros = RegistroHoras.objects.all()
-    return render(request, 'registro_horas/lista_horas.html', {'registros': registros})
+    horas = RegistroHoras.objects.all()
+    return render(request, 'comunidad/horas/lista_horas.html', {'horas': horas})

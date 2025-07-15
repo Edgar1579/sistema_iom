@@ -260,11 +260,16 @@ class Usuario(models.Model):
         """Obtiene usuarios por departamento"""
         return Usuario.objects.filter(departamento=departamento, estado=True)
 
+
+
+
+
 class RegistroHoras(models.Model):
-    usuario = models.ForeignKey(User, verbose_name=_("Administrador"), on_delete=models.CASCADE)
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     fecha = models.DateField()
     horas_trabajadas = models.DecimalField(max_digits=5, decimal_places=2)
     horas_extras = models.DecimalField(max_digits=5, decimal_places=2, default=0)
-    permisos = models.TextField(blank=True)
+    permisos = models.BooleanField(default=False)
+
     def __str__(self):
-        return f"{self.usuario.username} - {self.fecha}"
+        return f"{self.usuario} - {self.fecha}"

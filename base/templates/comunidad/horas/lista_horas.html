@@ -1,7 +1,6 @@
 {% extends 'partials/admin/body.html' %}
 {% load crispy_forms_tags %}
 {% load bootstrap_icons %}
-{% load static %}
 
 {% block contenido %}
 <div class="container-fluid m-4">
@@ -37,6 +36,6 @@
             {% endfor %}
         </tbody>
     </table>
-    <a href="{% url 'registro_horas:registrar_horas' %}" class="btn btn-success">Registrar Nuevas Horas</a>
+    <a href="{% url 'registrar_horas' %}" class="btn btn-success">Registrar Nuevas Horas</a>
 </div>
 {% endblock %}

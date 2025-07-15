@@ -4,8 +4,7 @@ from django.conf import settings
 from django.conf.urls.static import static  # Importa static
 from base.views import principal, principal_admin
 
-# Vista para la página de inicio
- # Cambia esto por tu lógica
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
