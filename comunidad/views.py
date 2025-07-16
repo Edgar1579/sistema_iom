@@ -56,9 +56,10 @@ def usuario_crear(request):
         "form": form,
     }
     return render(request, "comunidad/usuarios/usuarios.html", context)
-def usuario_eliminar(request, pk):
+def usuario_eliminar(request,pk):
     usuario = Usuario.objects.filter(id=pk)
     usuario.update(estado=False)
+    
 
     messages.success(request, "Usuario eliminado correctamente.")
     return redirect('usuarios')
