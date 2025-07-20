@@ -3,6 +3,7 @@ from django.contrib import messages
 from configuracion.models import Slider
 from comunidad.models import Usuario
 from django.contrib.auth.models import User
+from django.contrib.auth import logout 
 
 def principal(request):
     titulo = "Bienvenido"
@@ -60,3 +61,7 @@ def principal_admin(request):
         "tipos_documento": Usuario.TipoDocumento.choices,
     }
     return render(request, "index-admin.html", context)
+def logout_user(request):
+    logout(request)
+    messages.success(request, "Has cerrado sesión exitosamente.")
+    return redirect('index')  # Redirige a la página de inicio de sesión después
