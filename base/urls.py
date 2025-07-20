@@ -10,8 +10,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', principal, name='index'),  # Ruta para la página principal
     path('adm/', principal_admin, name='index-admin'),
-    path('comunidad/', include('comunidad.urls'))  # Incluye las URLs de la aplicación comunidad
-    
+    path('comunidad/', include('comunidad.urls')),  # Incluye las URLs de la aplicación comunidad
+    path('operaciones/', include('operaciones.urls'))
 ]
 
 # Solo para desarrollo: sirve archivos estáticos y media

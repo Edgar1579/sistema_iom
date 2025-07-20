@@ -1,0 +1,26 @@
+{% extends 'partials/admin/body.html' %}
+{% load static %}
+{% load bootstrap_icons %}
+{% load crispy_forms_tags %}
+
+{% block contenido %}
+<div class="container mt-4">
+    <h1>{% if object %}Editar{% else %}Crear{% endif %} Anuncio</h1>
+    <a href="{% url 'anuncio_lista' %}" class="btn btn-secondary mb-3">
+        {% bs_icon 'arrow-left' %} Volver a la lista
+    </a>
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form|crispy }}
+                <div class="form-group mt-4">
+                    <button type="submit" class="btn btn-primary">
+                        {% bs_icon 'save' %} Guardar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

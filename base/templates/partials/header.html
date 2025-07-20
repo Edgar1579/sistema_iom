@@ -1,4 +1,5 @@
 {% load static %}
+{% load bootstrap_icons %}
 <header class="p-3 mb-3 border-bottom">
   <div class="container">
     <div
@@ -12,8 +13,8 @@
   src="{% static 'images/logoiom.png' %}" 
   alt="Logo IOM" 
   class="me-2"
-  width="40" 
-  height="32"
+  width="70" 
+  height="62"
   style="object-fit: contain;"
 >
       </a>
@@ -46,13 +47,7 @@
           data-bs-toggle="dropdown"
           aria-expanded="false"
         >
-          <img
-            src="https://github.com/mdo.png"
-            alt="mdo"
-            width="32"
-            height="32"
-            class="rounded-circle"
-          />
+          <i class="bi bi-person-circle" style="font-size: 32px;"></i>
         </a>
         <ul class="dropdown-menu text-small">
           <li><a class="dropdown-item" href="{% url 'index-admin' %}">Acceder</a></li>

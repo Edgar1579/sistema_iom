@@ -1,0 +1,48 @@
+{% extends 'partials/admin/body.html' %}
+{% load static %}
+{% load bootstrap_icons %}
+{% load crispy_forms_tags %}
+
+{% block contenido %}
+<div class="container mt-4">
+    <h1>Lista de Anuncios</h1>
+    <a href="{% url 'anuncio_crear' %}" class="btn btn-success mb-3">
+        {% bs_icon 'plus' %} Crear Anuncio
+    </a>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Título</th>
+                    <th>Contenido</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for anuncio in anuncios %}
+                <tr>
+                    <td>{{ anuncio.id }}</td>
+                    <td>{{ anuncio.titulo }}</td>
+                    <td>{{ anuncio.contenido }}</td>
+                    <td>{{ anuncio.get_estado_display }}</td>
+                    <td>
+                        <a href="{% url 'anuncio_editar' anuncio.id %}" class="btn btn-warning btn-sm">
+                            {% bs_icon 'pencil' %} Editar
+                        </a>
+                        <a href="{% url 'anuncio_eliminar' anuncio.id %}" class="btn btn-danger btn-sm">
+                            {% bs_icon 'trash' %} Eliminar
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center">No hay anuncios registrados.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

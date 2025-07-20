@@ -26,72 +26,74 @@
   <div class="rounded card p-3 col-md-4">
     <form method="POST" enctype="multipart/form-data">
       {% csrf_token %}
-      <h5 class="mb-3">Registrar Horas</h5>
+      <h5 class="mb-3">Solicitar Permiso</h5>
       {{ form|crispy }}
-      <input class="btn btn-success" type="submit" value="Registrar Horas" />
-      <a href="{% url 'lista_horas' %}" class="btn btn-danger">Cancelar</a>
+      <input class="btn btn-success" type="submit" value="Solicitar Permiso" />
+      <a href="{% url 'lista_permisos' %}" class="btn btn-danger">Cancelar</a>
     </form>
   </div>
 
   <div class="rounded card p-3 mx-4 col-md-7">
-    <h5>Lista de Horas Registradas</h5>
-    <table class="table table-bordered w-100 display nowrap" id="tabla-horas">
+    <h5>Lista de Permisos Solicitados</h5>
+    <table class="table table-bordered w-100 display nowrap" id="tabla-permisos">
       <thead>
         <tr>
           <th>Usuario</th>
-          <th>Fecha</th>
-          <th>Horas Trabajadas</th>
-          <th>Horas Extras</th>
-          <th>Permisos/Notas</th>
+          <th>Tipo de Permiso</th>
+          <th>Fecha de Inicio</th>
+          <th>Fecha de Fin</th>
+          <th>Motivo</th>
+          <th>Estado</th>
           <th>Acciones</th>
         </tr>
       </thead>
       <tbody>
-        {% for registro in registros %}
+        {% for permiso in permisos %}
           <tr>
-            <td>{{ registro.usuario.get_full_name }}</td>
-            <td>{{ registro.fecha|date:"d/m/Y" }}</td>
-            <td>{{ registro.horas_normales }} hrs</td>
-            <td>{{ registro.horas_extras }} hrs</td>
-            <td>{{ registro.permisos|default:"-" }}</td>
+            <td>{{ permiso.usuario.get_full_name }}</td>
+            <td>{{ permiso.get_tipo_display }}</td>
+            <td>{{ permiso.fecha_inicio|date:"d/m/Y" }}</td>
+            <td>{{ permiso.fecha_fin|date:"d/m/Y" }}</td>
+            <td>{{ permiso.motivo }}</td>
+            <td>{{ permiso.get_estado_display }}</td>
             <td>
               <!-- Botón que abre el modal para eliminar -->
               <button type="button"
                       class="btn btn-danger"
                       data-bs-toggle="modal"
-                      data-bs-target="#staticBackdrop{{ registro.id }}"
-                      title="Eliminar registro de {{ registro.usuario.get_full_name }}"
+                      data-bs-target="#staticBackdrop{{ permiso.id }}"
+                      title="Eliminar permiso de {{ permiso.usuario.get_full_name }}"
                       data-bs-toggle="tooltip">
                 {% bs_icon 'trash' %}
               </button>
 
               <!-- Modal -->
-              <div class="modal fade" id="staticBackdrop{{ registro.id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel{{ registro.id }}" aria-hidden="true">
+              <div class="modal fade" id="staticBackdrop{{ permiso.id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel{{ permiso.id }}" aria-hidden="true">
                 <div class="modal-dialog">
                   <div class="modal-content">
                     <div class="modal-header">
-                      <h1 class="modal-title fs-5" id="staticBackdropLabel{{ registro.id }}">
-                        ¿Estás seguro de eliminar el registro de <strong>{{ registro.usuario.get_full_name }}</strong>?
+                      <h1 class="modal-title fs-5" id="staticBackdropLabel{{ permiso.id }}">
+                        ¿Estás seguro de eliminar el permiso de <strong>{{ permiso.usuario.get_full_name }}</strong>?
                       </h1>
                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                     </div>
                     <div class="modal-body">
-                      Una vez eliminado, el registro no podrá recuperarse.
+                      Una vez eliminado, el permiso no podrá recuperarse.
                     </div>
                     <div class="modal-footer">
                       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                      <a href="{% url 'registro_horas:eliminar_horas' registro.id %}" class="btn btn-danger">¡Eliminar!</a>
+                      <a href="{% url 'solicitar_permiso:eliminar_permiso' permiso.id %}" class="btn btn-danger">¡Eliminar!</a>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <a href="{% url 'registro_horas:editar_horas' registro.id %}" class="btn btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar registro de {{ registro.usuario.get_full_name }}">{% bs_icon 'pencil' %}</a>
+              <a href="{% url 'solicitar_permiso:editar_permiso' permiso.id %}" class="btn btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar permiso de {{ permiso.usuario.get_full_name }}">{% bs_icon 'pencil' %}</a>
             </td>
           </tr>
         {% empty %}
           <tr>
-            <td colspan="6" class="text-center text-muted">No hay registros disponibles</td>
+            <td colspan="7" class="text-center text-muted">No hay permisos solicitados disponibles</td>
           </tr>
         {% endfor %}
       </tbody>

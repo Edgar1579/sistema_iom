@@ -1,0 +1,164 @@
+<script>
+$(document).ready(function () {
+    // Inicializar DataTable
+    $('#tabla-usuarios').DataTable({
+        responsive: true,
+        dom: 'Bfrtip',
+        columnDefs: [
+            { responsivePriority: 1, targets: 0 },    // Imagen (siempre visible)
+            { responsivePriority: 2, targets: 1 },    // Primer Nombre (alta prioridad)
+            { responsivePriority: 3, targets: 3 },    // Primer Apellido (media prioridad)
+            { responsivePriority: 1, targets: -1 },   // Botones de acción (siempre visible)
+            { orderable: false, targets: [0, -1] },   // Imagen y acciones no ordenables
+            { searchable: false, targets: [0, -1] },  // Imagen y acciones no buscables
+            { width: "80px", targets: 0 },            // Ancho fijo para imagen
+            { width: "120px", targets: -1 }           // Ancho fijo para acciones
+        ],
+        buttons: ["copy", "csv", "excel", "pdf", "print", "colvis"],
+        language: {
+            processing: "Procesando...",
+            search: "Buscar:",
+            lengthMenu: "Mostrar _MENU_ registros",
+            info: "Mostrando registros del _START_ al _END_ de un total de _TOTAL_",
+            infoEmpty: "Mostrando registros del 0 al 0 de un total de 0",
+            infoFiltered: "(filtrado de un total de _MAX_ registros)",
+            loadingRecords: "Cargando...",
+            zeroRecords: "No se encontraron resultados",
+            emptyTable: "Ningún dato disponible en esta tabla",
+            paginate: {
+                first: "Primero",
+                previous: "Anterior",
+                next: "Siguiente",
+                last: "Último"
+            },
+            buttons: {
+                copy: "copiar",
+                pdf: "Exportar PDF",
+                print: "Imprimir",
+                copyTitle: 'Copiado al portapapeles',
+                copySuccess: {
+                    _: '%d filas copiadas',
+                    1: '1 fila copiada'
+                },
+                colvis: 'Columnas visibles'
+            },
+            aria: {
+                sortAscending: ": activar para ordenar de manera ascendente",
+                sortDescending: ": activar para ordenar de manera descendente"
+            }
+        },
+        drawCallback: function() {
+            // Re-inicializar eventos después de cada redraw de DataTables
+            initializeModalEvents();
+        }
+    }).buttons().container().appendTo('#tabla-usuarios_wrapper .col-md-6:eq(0)');
+    
+    // Inicializar eventos del modal por primera vez
+    initializeModalEvents();
+});
+
+// Función para inicializar eventos del modal y SweetAlert (evita conflictos con DataTables)
+function initializeModalEvents() {
+    // Evento para botón de editar con SweetAlert2
+    $(document).off('click', '.btn-editar').on('click', '.btn-editar', function(e) {
+        e.preventDefault();
+        
+        const userName = $(this).data('name');
+        const editUrl = $(this).data('url');
+        
+        Swal.fire({
+            title: '¿Editar usuario?',
+            html: `¿Deseas editar a <strong>${userName}</strong>?`,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#007bff',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: '<i class="fas fa-edit"></i> Sí, editar',
+            cancelButtonText: '<i class="fas fa-times"></i> Cancelar',
+            reverseButtons: true,
+            focusConfirm: false,
+            customClass: {
+                popup: 'animated fadeInDown'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Mostrar loading
+                Swal.fire({
+                    title: 'Cargando...',
+                    html: 'Redirigiendo al formulario de edición',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    showConfirmButton: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+                
+                // Redireccionar después de un breve delay
+                setTimeout(() => {
+                    window.location.href = editUrl;
+                }, 800);
+            }
+        });
+    });
+    
+    // Usar delegación de eventos para que funcione con elementos dinámicos
+    $(document).off('click', '.btn-eliminar').on('click', '.btn-eliminar', function(e) {
+        e.preventDefault();
+        
+        // Obtener datos del elemento
+        const userId = $(this).data('id');
+        const userName = $(this).data('name') || 'este usuario';
+        const userDocumento = $(this).data('documento') || 'N/A';
+        
+        // Configurar el contenido del modal
+        $('#usuario-nombre').text(userName);
+        $('#usuario-documento').text(userDocumento);
+        
+        // Configurar el botón de confirmación
+        $('.btn-confirm-delete').data('id', userId);
+        
+        // Mostrar el modal
+        $('#modalEliminar').modal('show');
+    });
+    
+    // Evento para el botón de confirmación dentro del modal
+    $(document).off('click', '.btn-confirm-delete').on('click', '.btn-confirm-delete', function(e) {
+        e.preventDefault();
+        
+        const userId = $(this).data('id');
+        
+        // Deshabilitar el botón para evitar doble click
+        $(this).prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Eliminando...');
+        
+        // Enviar petición AJAX para eliminar
+        $.ajax({
+            url: `/usuarios/eliminar/${userId}/`, // Ajusta la URL según tu estructura
+            type: 'POST',
+            data: {
+                'csrfmiddlewaretoken': $('[name=csrfmiddlewaretoken]').val()
+            },
+            success: function(response) {
+                // Cerrar el modal
+                $('#modalEliminar').modal('hide');
+                
+                // Mostrar mensaje de éxito
+                toastr.success('Usuario eliminado correctamente');
+                
+                // Recargar la tabla
+                $('#tabla-usuarios').DataTable().ajax.reload();
+                
+                // O recargar la página si no usas AJAX
+                // location.reload();
+            },
+            error: function(xhr, status, error) {
+                // Mostrar mensaje de error
+                toastr.error('Error al eliminar el usuario');
+                
+                // Re-habilitar el botón
+                $('.btn-confirm-delete').prop('disabled', false).html('<i class="fas fa-trash"></i> Eliminar usuario');
+            }
+        });
+    });
+}
+</script>

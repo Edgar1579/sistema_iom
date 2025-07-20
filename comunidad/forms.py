@@ -12,13 +12,21 @@ class UsuarioForm(ModelForm):
             'fecha_nacimiento': widgets.DateInput(attrs={'type': 'date'}, format='%Y-%m-%d')
         }
 
-class UsuarioEditarForm(ModelForm):
+class UsuarioEditarForm(forms.ModelForm):
     class Meta:
         model = Usuario
         fields = "__all__"
-        exclude = ["estado", "user"]
-
-
+        exclude = ["estado", "user", "documento", "fecha_nacimiento"]
+        # Widget personalizado para el campo de fecha (si lo necesitas)
+        widgets = {
+            'fecha_ingreso': forms.DateInput(attrs={'type': 'date'}),
+        }
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Remueve completamente los campos excluidos del formulario
+        for field_name in self.Meta.exclude:
+            if field_name in self.fields:
+                del self.fields[field_name]
 
 
 class RegistroHorasForm(forms.ModelForm):

@@ -76,23 +76,18 @@
                 </li>
 
                 <li class="nav-item menu-close">
-                    <a href="#" class="nav-link ">
-                        {% bs_icon 'megaphone-fill' %}
+                    <a href=" {% url 'anuncio_crear' %} " class="nav-link ">
+                        {% bs_icon 'newspaper' size='1.5em' %}
                         <p>Operaciones</p>
                     </a>
                     <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="" class="nav-link" data-url="">
-                                {% bs_icon 'box-seam-fill' %}
-                                <p>Productos</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="" class="nav-link" data-url="">
-                                {% bs_icon 'basket-fill' %}
-                                <p>Pedidos</p>
-                            </a>
-                        </li>
+                           <li class="nav-item">
+       <a href="{% url 'anuncio_lista' %}" class="nav-link" data-url="">
+           {% bs_icon 'megaphone-fill' %}
+           <p>Anuncios</p>
+       </a>
+   </li>
+                        
                     </ul>
                 </li>
 

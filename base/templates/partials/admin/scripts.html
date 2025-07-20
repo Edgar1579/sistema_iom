@@ -1,65 +1,55 @@
 {% load static %}
 <script src="{% static 'js/jquery/jquery.min.js'%}"></script>
 <script src="{% static 'js/adminlte/adminlte.js'%}"></script>
-<script>
+<!-- <script>
   document.addEventListener('DOMContentLoaded', function () {
     const toastElList = [].slice.call(document.querySelectorAll('.toast'));
     toastElList.forEach(function (toastEl) {
       new bootstrap.Toast(toastEl, { delay: 3000 }).show();
     });
   });
-</script>
+</script> -->
 <!- para las tablas ->
 <script src="{% static 'DataTables/datatables.min.js' %}"></script>
 {% include 'partials/admin/datatables.html' %}
-<script>
-        $(document).ready(function () {
-            $('#tabla-usuarios').DataTable({
-                responsive: true,
-                dom: 'Bfrtip',
-                columnDefs: [
-                    { responsivePriority: 3, targets: 2 },
-                    { responsivePriority: 2, targets: 2 }
-                ],
-                buttons: ["copy", "csv", "excel", "pdf", "print", "colvis"],
-                language: {
-                    processing: "Procesando...",
-                    search: "Buscar:",
-                    lengthMenu: "Mostrar _MENU_ registros",
-                    info: "Mostrando registros del _START_ al _END_ de un total de _TOTAL_",
-                    infoEmpty: "Mostrando registros del 0 al 0 de un total de 0",
-                    infoFiltered: "(filtrado de un total de _MAX_ registros)",
-                    loadingRecords: "Cargando...",
-                    zeroRecords: "No se encontraron resultados",
-                    emptyTable: "Ningún dato disponible en esta tabla",
-                    paginate: {
-                        first: "Primero",
-                        previous: "Anterior",
-                        next: "Siguiente",
-                        last: "Último"
-                    },
-                    buttons: {
-                        copy: "copiar",
-                        pdf: "Exportar PDF",
-                        print: "Imprimir",
-                        copyTitle: 'Copiado al portapapeles',
-                        copySuccess: {
-                            _: '%d filas copiadas',
-                            1: '1 fila copiada'
-                        },
-                        colvis: 'Columnas visibles'
-                    },
-                    aria: {
-                        sortAscending: ": activar para ordenar de manera ascendente",
-                        sortDescending: ": activar para ordenar de manera descendente"
-                    }
-                }
-            }).buttons().container().appendTo('#tabla-usuarios_wrapper .col-md-6:eq(0)');
-        });
-    </script>
 
 
 
 <!- para las alertas ->
 <script src="{% static 'Toastr/js/toastr.min.js' %}"></script>
+<script src="{% static 'Toastr/CSSs/toastr.min.css' %}"></script>
+
 <link rel="stylesheet" href="{% static 'Toastr/css/toastr.min.css' %}">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+{% if messages %}
+  {% for message in messages %}
+    <script>
+    // Mapear tags de Django a métodos de toastr
+    let messageType = '{{ message.tags }}';
+    let toastrMethod;
+    
+    switch(messageType) {
+        case 'error':
+            toastrMethod = 'error';
+            break;
+        case 'warning':
+            toastrMethod = 'warning';
+            break;
+        case 'success':
+            toastrMethod = 'success';
+            break;
+        case 'info':
+            toastrMethod = 'info';
+            break;
+        default:
+            toastrMethod = 'info';
+    }
+    
+    toastr[toastrMethod]('{{ message|safe }}', '', {
+        closeButton: true,
+        progressBar: true,
+        positionClass: 'toast-top-center'
+    });
+    </script>
+  {% endfor %}
+{% endif %}

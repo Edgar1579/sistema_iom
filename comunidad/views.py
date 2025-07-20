@@ -65,8 +65,7 @@ def usuario_eliminar(request,pk):
     return redirect('usuarios')
 
 def usuario_editar(request, pk):
-    
-    
+
     usuario = Usuario.objects.get(id=pk)
     usuarios = Usuario.objects.all()
     # Titulo dinámico con datos del usuario ya obtenido
@@ -76,7 +75,7 @@ def usuario_editar(request, pk):
     if request.method == "POST":
         form = UsuarioEditarForm(request.POST, request.FILES, instance=usuario)
         if form.is_valid():
-            documento = request.POST['documento']
+           
             correo = request.POST['correo']
             primer_nombre = request.POST['primer_nombre']
             primer_apellido = request.POST['primer_apellido']
@@ -84,17 +83,17 @@ def usuario_editar(request, pk):
             # Actualizar el usuario del modelo User
             user = usuario.user
             if user:
-                user.username = documento
+                
                 user.email = correo
                 user.first_name = primer_nombre
                 user.last_name = primer_apellido
                 user.save()
             else:
                 user = User.objects.create_user(
-                    username=documento,
+                   
                     email=correo,
                     password=make_password(
-                        "@" + primer_nombre[0] + primer_apellido[0] + documento[-4:]
+                        "@" + primer_nombre[0] + primer_apellido[0] 
                     )
                 )
                 usuario.user = user
