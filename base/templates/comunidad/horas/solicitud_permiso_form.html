@@ -1,0 +1,16 @@
+<!-- comunidad/templates/comunidad/horas/solicitud_permiso_form.html -->
+{% extends 'partials/admin/body.html' %}
+{% load crispy_forms_tags %}
+{% load bootstrap_icons %}
+{% load static %}
+{% block contenido %}
+<div class="container mt-4">
+    <h1>Solicitar Permiso</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-success">Enviar Solicitud</button>
+        <a href="{% url 'solicitud_permiso_list' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

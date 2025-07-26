@@ -1,0 +1,38 @@
+<!-- comunidad/templates/comunidad/horas/solicitud_permiso_list.html -->
+{% extends 'partials/admin/body.html' %}
+{% load crispy_forms_tags %}
+{% load bootstrap_icons %}
+
+{% load static %}
+{% block contenido %}
+<div class="container mt-4">
+    <h1>Solicitudes de Permiso</h1>
+    <a href="{% url 'solicitud_permiso_create' %}" class="btn btn-primary mb-3">Solicitar Nuevo Permiso</a>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Hora de Inicio</th>
+                <th>Hora de Fin</th>
+                <th>Motivo</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for solicitud in solicitudes %}
+            <tr>
+                <td>{{ solicitud.fecha }}</td>
+                <td>{{ solicitud.hora_inicio }}</td>
+                <td>{{ solicitud.hora_fin }}</td>
+                <td>{{ solicitud.motivo }}</td>
+                <td>{{ solicitud.get_estado_display }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5">No hay solicitudes de permiso.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

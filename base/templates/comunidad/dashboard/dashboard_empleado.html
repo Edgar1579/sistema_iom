@@ -1,0 +1,11 @@
+<!-- comunidad/templates/comunidad/dashboard_empleado.html -->
+{% extends 'index.html' %}
+
+{% block content %}
+<h2>Dashboard Empleado</h2>
+<ul>
+    <li><a href="{% url 'comunidad:registrar_permiso' %}">Registrar Permiso</a></li>
+    <li><a href="{% url 'comunidad:actualizar_datos' %}">Actualizar Datos Personales</a></li>
+    <li><a href="{% url 'comunidad:registro_horas' %}">Registro de Horas</a></li>
+</ul>
+{% endblock %}

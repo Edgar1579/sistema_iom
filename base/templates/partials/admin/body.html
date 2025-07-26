@@ -6,8 +6,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{% static 'images/logoiom.png' %}" type="image/png">
+    {{ form.media.css }}
+
+
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+
+    <link rel="stylesheet" href="{% static 'css/adminlte.min.css' %}">
+
     <!-para las tablas ->
     <link href="{% static 'DataTables/datatables.min.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/adminlte.min.css' %}">
+
+
+
+
     <!-para las alertas ->
         <link href="{% static 'Toastr/css/toastr.min.css' %}" rel="stylesheet">
 
@@ -15,9 +28,9 @@
     {% bootstrap_css %}
     {% bootstrap_javascript %}
     {% load bootstrap_icons %}
-    <link rel="stylesheet" href="{% static 'css/adminlte.min.css' %}">
     
-    {{ form.media.css }}
+    
+    
 
 
     <link rel="shortcut icon" href="{% static 'images/logoiom.png' %}"

@@ -2,23 +2,31 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from configuracion.models import Slider
 from comunidad.models import Usuario
+from operaciones.models import Anuncio
 from django.contrib.auth.models import User
-from django.contrib.auth import logout 
+from django.contrib.auth import logout
+from django.contrib.auth.decorators import login_required
 
 def principal(request):
     titulo = "Bienvenido"
     sliders = Slider.objects.filter(estado=True)
+    # Asegúrate de definir 'anuncios' aquí
+    anuncios = Anuncio.objects.filter(estado=True)  # Ejemplo de cómo podrías obtener anuncios
     context = {
         "titulo": titulo,
-        "sliders": sliders
+        "sliders": sliders,
+        "anuncios": anuncios
     }
     return render(request, "index.html", context)
 
+@login_required
 def principal_admin(request):
-    titulo = "Administración"
+    titulo = "Bienvenido"
     
     # Obtener todos los usuarios
-    usuarios = Usuario.objects.all()
+    usuarios = Usuario.objects.all().count()
+    # Obtener todos los anuncios
+    anuncios = Anuncio.objects.all().count()
     
     # Procesar formulario si es POST
     if request.method == 'POST':
@@ -51,17 +59,18 @@ def principal_admin(request):
             messages.success(request, 'Usuario creado exitosamente.')
             return redirect('index-admin')
             
+        except User.DoesNotExist:
+            messages.error(request, 'Error: El usuario no pudo ser creado.')
         except Exception as e:
             messages.error(request, f'Error al crear usuario: {str(e)}')
     
     context = {
         "titulo": titulo,
         "usuarios": usuarios,
-        "roles": Usuario.RolChoices.choices,
-        "tipos_documento": Usuario.TipoDocumento.choices,
+
     }
     return render(request, "index-admin.html", context)
+
 def logout_user(request):
     logout(request)
-    messages.success(request, "Has cerrado sesión exitosamente.")
-    return redirect('index')  # Redirige a la página de inicio de sesión después
+    return redirect('index') # Asegúrate de que 'index' sea una URL válida
