@@ -5,8 +5,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import make_password
 
-from comunidad.models import Usuario, RegistroHorario, SolicitudPermiso, CalculoJornada
-from comunidad.forms import UsuarioForm, UsuarioEditarForm, RegistroHorarioForm, SolicitudPermisoForm, ActualizarDatosForm
+from comunidad.models import Usuario, RegistroHoras, SolicitudPermiso, CalculoJornada
+from comunidad.forms import UsuarioForm, UsuarioEditarForm, RegistroHorasForm, SolicitudPermisoForm, ActualizarDatosForm
 from datetime import datetime
 from django.core.paginator import Paginator
 
@@ -114,13 +114,13 @@ def usuario_editar(request, pk):
 
 @login_required
 def lista_registro_horario(request):
-    registros = RegistroHorario.objects.filter(usuario=request.user)
+    registros = RegistroHoras.objects.filter(usuario=request.user)
     return render(request, 'comunidad/horas/registro_horario_list.html', {'registros': registros})
 
 @login_required
 def crear_registro_horario(request):
     if request.method == 'POST':
-        form = RegistroHorarioForm(request.POST)
+        form = RegistroHorasForm(request.POST)
         if form.is_valid():
             registro = form.save(commit=False)
             registro.usuario = request.user
@@ -153,13 +153,13 @@ def crear_registro_horario(request):
         else:
             messages.error(request, "Error al crear el registro de horario. Por favor, verifica los datos.")
     else:
-        form = RegistroHorarioForm()
+        form = RegistroHorasForm()
     
     return render(request, 'comunidad/horas/registro_horario_form.html', {'form': form})
 
 @login_required
 def detalle_pago(request, registro_id):
-    registro = get_object_or_404(RegistroHorario, id=registro_id, usuario=request.user)
+    registro = get_object_or_404(RegistroHoras, id=registro_id, usuario=request.user)
     pago_total = registro.calcular_pago_total()
     
     return render(request, 'detalle_pago.html', {

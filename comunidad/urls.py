@@ -1,6 +1,6 @@
 # comunidad/urls.py
 from django.urls import path
-from comunidad.views import usuario_crear, usuario_eliminar, usuario_editar, lista_registro_horario, crear_registro_horario, lista_solicitud_permiso, crear_solicitud_permiso, dashboard_empleado, dashboard_administrador
+from comunidad.views import usuario_crear, usuario_eliminar, usuario_editar, lista_registro_horario, crear_registro_horario, lista_solicitud_permiso, crear_solicitud_permiso, dashboard_empleado, dashboard_administrador, actualizar_datos
 
 
 urlpatterns = [
@@ -13,4 +13,6 @@ urlpatterns = [
     path("solicitud_permiso/nuevo/", crear_solicitud_permiso, name='solicitud_permiso_create'),
     path('dashboard/empleado/', dashboard_empleado, name='dashboard_empleado'),
     path('dashboard/administrador/', dashboard_administrador, name='dashboard_administrador'),
+    path("actualizar_datos/", actualizar_datos, name='actualizar_datos'),
+    
 ]

@@ -11,10 +11,13 @@ urlpatterns = [
     path('login/',auth_views.LoginView.as_view(), name='login'),
     path('logout/', logout_user, name='logout'),
     path('admin/', admin.site.urls),
-    path('', principal, name='index'),  # Ruta para la página principal
+    path('', principal, name='index'),
+    path('base/', principal, name='base'),# Ruta para la página principal
     path('adm/', principal_admin, name='index-admin'),
     path('comunidad/', include('comunidad.urls')),  # Incluye las URLs de la aplicación comunidad
     path('operaciones/', include('operaciones.urls'))
+    
+   
 ]
 
 # Solo para desarrollo: sirve archivos estáticos y media

@@ -1,11 +1,25 @@
-<!-- comunidad/templates/comunidad/dashboard_empleado.html -->
 {% extends 'index.html' %}
 
-{% block content %}
-<h2>Dashboard Empleado</h2>
-<ul>
-    <li><a href="{% url 'comunidad:registrar_permiso' %}">Registrar Permiso</a></li>
-    <li><a href="{% url 'comunidad:actualizar_datos' %}">Actualizar Datos Personales</a></li>
-    <li><a href="{% url 'comunidad:registro_horas' %}">Registro de Horas</a></li>
-</ul>
+{% block dashboard_content %}
+<div class="card shadow">
+    <div class="card-header bg-primary text-white">
+        <h3 class="mb-0"><i class="bi bi-speedometer2"></i> Dashboard Empleado</h3>
+    </div>
+    <div class="card-body">
+        <div class="list-group">
+            <a href="{% url 'registrar_permiso' %}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                <span><i class="bi bi-calendar-plus"></i> Registrar Permiso</span>
+                <i class="bi bi-chevron-right"></i>
+            </a>
+            <a href="{% url 'actualizar_datos' %}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                <span><i class="bi bi-person-lines-fill"></i> Actualizar Datos Personales</span>
+                <i class="bi bi-chevron-right"></i>
+            </a>
+            <a href="{% url 'registro_horas' %}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                <span><i class="bi bi-clock-history"></i> Registro de Horas</span>
+                <i class="bi bi-chevron-right"></i>
+            </a>
+        </div>
+    </div>
+</div>
 {% endblock %}

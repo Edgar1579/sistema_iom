@@ -1,6 +1,7 @@
+from dataclasses import field
 from django import forms
 from django.forms import ModelForm, widgets
-from comunidad.models import Usuario, RegistroHorario, SolicitudPermiso
+from comunidad.models import Usuario, RegistroHoras, SolicitudPermiso
 
 class UsuarioForm(ModelForm):
     class Meta:
@@ -28,12 +29,12 @@ class UsuarioEditarForm(ModelForm):
             if field_name in self.fields:
                 del self.fields[field_name]
 
+field
 
 
-
-class RegistroHorarioForm(ModelForm):
+class RegistroHorasForm(ModelForm):
     class Meta:
-        model = RegistroHorario
+        model = RegistroHoras
         fields = ['usuario', 'fecha', 'hora_entrada', 'hora_salida']
         widgets = {
             'fecha': forms.DateInput(attrs={
@@ -76,6 +77,3 @@ class ActualizarDatosForm(forms.ModelForm):
             'departamento': forms.TextInput(attrs={'class': 'form-control'}),
             'cargo': forms.TextInput(attrs={'class': 'form-control'}),
         }
-
-
-

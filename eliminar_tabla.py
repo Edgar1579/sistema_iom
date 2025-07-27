@@ -15,14 +15,14 @@ if os.path.exists('db.sqlite3'):
         print(f"  - {tabla[0]}")
     
     # Verificar si la tabla existe
-    cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='comunidad_empleado';")
+    cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='comunidad_registrohorario;")
     tabla_existe = cursor.fetchone()
     
     if tabla_existe:
         # Eliminar la tabla
-        cursor.execute("DROP TABLE comunidad_empleado;")
+        cursor.execute("DROP TABLE comunidad_registrohorario;")
         conn.commit()
-        print("\n✅ Tabla 'comunidad_empleado' eliminada exitosamente")
+        print("\n✅ Tabla 'comunidad_registrohorario eliminada exitosamente")
         
         # Mostrar tablas después
         print("\nTablas después de eliminar:")
@@ -31,7 +31,7 @@ if os.path.exists('db.sqlite3'):
         for tabla in tablas:
             print(f"  - {tabla[0]}")
     else:
-        print("❌ La tabla 'comunidad_empleado' no existe")
+        print("❌ La tabla 'comunidad_registrohorario no existe")
     
     # Cerrar conexión
     conn.close()
