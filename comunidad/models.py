@@ -11,6 +11,7 @@ def get_image_filename(instance, filename):
     filename = f"{instance.documento}.{ext}"
     return f"comunidad/usuarios/{filename}"
 
+
 class Usuario(models.Model):
     primer_nombre = models.CharField(max_length=45, verbose_name="Primer Nombre")
     segundo_nombre = models.CharField(max_length=45, verbose_name="Segundo Nombre", blank=True, null=True)
@@ -35,12 +36,10 @@ class Usuario(models.Model):
     rol = models.CharField(max_length=5, choices=RolChoices.choices, default=RolChoices.EMPLEADO, verbose_name="Rol")
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     estado = models.BooleanField(default=True, verbose_name="Estado Activo")
-
     departamento = models.CharField(max_length=100, verbose_name="Departamento", blank=True, null=True, help_text="Departamento al que pertenece el usuario")
     cargo = models.CharField(max_length=100, verbose_name="Cargo", blank=True, null=True, help_text="Cargo o posición del usuario")
     telefono = models.CharField(max_length=15, verbose_name="Teléfono", blank=True, null=True)
     fecha_ingreso = models.DateField(verbose_name="Fecha de Ingreso", blank=True, null=True)
-
     fecha_creacion = models.DateTimeField(auto_now_add=True, verbose_name="Fecha de Creación")
     fecha_actualizacion = models.DateTimeField(auto_now=True, verbose_name="Fecha de Actualización")
     creado_por = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='usuarios_creados', verbose_name="Creado por")
@@ -159,17 +158,17 @@ class RegistroHoras(models.Model):
     def calcular_pago_total(self):
         pago = 0
         # Horas normales
-        pago += self.horas_normales_diurnas * 10000  # Ejemplo: $10,000 por hora normal
-        pago += self.horas_normales_nocturnas * 10000 * 1.35  # 35% recargo nocturno
+        pago += self.horas_normales_diurnas * 6.189  # Ejemplo: $10,000 por hora normal
+        pago += self.horas_normales_nocturnas * 6.189 * 1.35  # 35% recargo nocturno
 
         # Horas extras
         if self.es_domingo() or self.es_festivo():
             recargo = 0.80 if self.es_domingo() else 0.80  # 80% recargo
-            pago += self.horas_extras_diurnas * 10000 * (1 + recargo)
-            pago += self.horas_extras_nocturnas * 10000 * (1 + recargo + 0.35)  # 35% recargo nocturno
+            pago += self.horas_extras_diurnas * 6.189 * (1 + recargo)
+            pago += self.horas_extras_nocturnas * 6.189 * (1 + recargo + 0.35)  # 35% recargo nocturno
         else:
-            pago += self.horas_extras_diurnas * 10000 * 1.25  # 25% recargo extra diurno
-            pago += self.horas_extras_nocturnas * 10000 * 1.75  # 75% recargo extra nocturno
+            pago += self.horas_extras_diurnas * 6.189 * 1.25  # 25% recargo extra diurno
+            pago += self.horas_extras_nocturnas * 6.189 * 1.75  # 75% recargo extra nocturno
 
         return pago
 

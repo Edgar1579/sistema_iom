@@ -7,6 +7,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 
+
+@login_required
 def principal(request):
     titulo = "Bienvenido"
     sliders = Slider.objects.filter(estado=True)

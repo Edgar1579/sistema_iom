@@ -1,9 +1,6 @@
 {% load static %}
 {% load django_bootstrap5 %}
 
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,10 +14,19 @@
 
     
     
+    </div>
+</div>  
         
 </head>
 <body class="hold-transition dark-mode login-page">
-    {% block contenido %}        
+    {% block contenido %}   
+         
     {% endblock contenido %}
+
+
+
 </body>
 </html>
+
+
+    {% include 'partials/admin/footer.html' %}

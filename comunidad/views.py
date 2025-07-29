@@ -4,7 +4,6 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import make_password
-
 from comunidad.models import Usuario, RegistroHoras, SolicitudPermiso, CalculoJornada
 from comunidad.forms import UsuarioForm, UsuarioEditarForm, RegistroHorasForm, SolicitudPermisoForm, ActualizarDatosForm
 from datetime import datetime
@@ -26,12 +25,11 @@ def usuario_crear(request):
             # Crear el usuario de Django si no existe
             user = User.objects.filter(username=documento).first()
             if not user:
+                password = "@" + primer_nombre[0].lower() + primer_apellido[0].lower() + documento[-4:]
                 user = User.objects.create_user(
                     username=documento,
                     email=correo,
-                    password=make_password(
-                        "@" + primer_nombre[0] + primer_apellido[0] + documento[-4:]
-                    )
+                    password=password  # No es necesario usar make_password aquí
                 )
                 user.first_name = primer_nombre
                 user.last_name = primer_apellido
@@ -56,6 +54,7 @@ def usuario_crear(request):
         "form": form,
     }
     return render(request, "comunidad/usuarios/usuarios.html", context)
+
 
 def usuario_eliminar(request, pk):
     usuario = Usuario.objects.filter(id=pk)
