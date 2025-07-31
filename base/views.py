@@ -1,12 +1,11 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from configuracion.models import Slider
-from comunidad.models import Usuario
 from operaciones.models import Anuncio
 from django.contrib.auth.models import User
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
-
+from comunidad.models import Usuario
 
 @login_required
 def principal(request):
@@ -24,9 +23,11 @@ def principal(request):
 @login_required
 def principal_admin(request):
     titulo = "Bienvenido"
-    
-    # Obtener todos los usuarios
     usuarios = Usuario.objects.all().count()
+    context = {
+        "titulo": titulo,
+        "usuarios_cantidad": usuarios,
+    }
     # Obtener todos los anuncios
     anuncios = Anuncio.objects.all().count()
     

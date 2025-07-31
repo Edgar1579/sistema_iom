@@ -5,112 +5,51 @@ from django.core.exceptions import ValidationError
 from datetime import datetime, timedelta, time
 from django.contrib.auth import get_user_model
 from django.utils import timezone
+import holidays
 
 def get_image_filename(instance, filename):
     ext = filename.split('.')[-1]
     filename = f"{instance.documento}.{ext}"
     return f"comunidad/usuarios/{filename}"
-
-
+# Create your models here.
 class Usuario(models.Model):
-    primer_nombre = models.CharField(max_length=45, verbose_name="Primer Nombre")
-    segundo_nombre = models.CharField(max_length=45, verbose_name="Segundo Nombre", blank=True, null=True)
-    primer_apellido = models.CharField(max_length=45, verbose_name="Primer Apellido")
-    segundo_apellido = models.CharField(max_length=45, verbose_name="Segundo Apellido")
-    fecha_nacimiento = models.DateField(verbose_name="Fecha de Nacimiento")
-    imagen = models.ImageField(upload_to=get_image_filename, blank=True, null=True, default="comunidad/default-user.jpeg")
+    primer_nombre= models.CharField(max_length=45,verbose_name="Primer Nombre")
+    segundo_nombre= models.CharField(max_length=45,verbose_name="Segundo Nombre", blank=True,null=True)
+
+    primer_apellido= models.CharField(max_length=45,verbose_name="Primer Apellido")
+    segundo_apellido= models.CharField(max_length=45,verbose_name="Segundo Apellido")
+    
+    fecha_nacimiento= models.DateField(verbose_name="Fecha de Nacimiento")
+    imagen = models.ImageField(upload_to=get_image_filename, blank=True, null=True,default="comunidad\default-user.jpeg")
     correo = models.EmailField(max_length=50, verbose_name="Correo")
-
+    
     class TipoDocumento(models.TextChoices):
-        CEDULA = 'CC', _("Cédula")
-        CEDULA_EXTRANJERIA = 'CE', _("Cédula de Extranjería")
-
-    tipo_documento = models.CharField(max_length=2, choices=TipoDocumento.choices, verbose_name="Tipo de Documento")
-    documento = models.PositiveIntegerField(verbose_name="Documento", unique=True)
-
-    class RolChoices(models.TextChoices):
-        ADMINISTRADOR = 'ADMIN', _("Administrador")
-        EMPLEADO = 'EMP', _("Empleado")
-        RECURSOS_HUMANOS = 'RH', _("Recursos Humanos")
-
-    rol = models.CharField(max_length=5, choices=RolChoices.choices, default=RolChoices.EMPLEADO, verbose_name="Rol")
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    estado = models.BooleanField(default=True, verbose_name="Estado Activo")
-    departamento = models.CharField(max_length=100, verbose_name="Departamento", blank=True, null=True, help_text="Departamento al que pertenece el usuario")
-    cargo = models.CharField(max_length=100, verbose_name="Cargo", blank=True, null=True, help_text="Cargo o posición del usuario")
+        CEDULA='CC',_("Cédula")
+        CEDULA_EXTRANJERIA='CE',_("Cédula de Extrangería")
+    tipo_documento=models.CharField(max_length=2,choices=TipoDocumento.choices,verbose_name="Tipo de Documento")
+    documento= models.PositiveIntegerField(verbose_name="Documento", unique=True)
+    user= models.ForeignKey(User, on_delete=models.CASCADE)
+    estado=models.BooleanField(default=True)
+    departamento = models.CharField(max_length=50, verbose_name="Departamento", blank=True, null=True)
     telefono = models.CharField(max_length=15, verbose_name="Teléfono", blank=True, null=True)
-    fecha_ingreso = models.DateField(verbose_name="Fecha de Ingreso", blank=True, null=True)
-    fecha_creacion = models.DateTimeField(auto_now_add=True, verbose_name="Fecha de Creación")
-    fecha_actualizacion = models.DateTimeField(auto_now=True, verbose_name="Fecha de Actualización")
-    creado_por = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='usuarios_creados', verbose_name="Creado por")
-
+    cargo = models.CharField(max_length=50, verbose_name="Cargo", blank=True, null=True)
     def clean(self):
-        super().clean()
-        # Normalizar nombres y apellidos
-        self.primer_nombre = self.primer_nombre.strip().title() if self.primer_nombre else self.primer_nombre
-        self.segundo_nombre = self.segundo_nombre.strip().title() if self.segundo_nombre else self.segundo_nombre
-        self.primer_apellido = self.primer_apellido.strip().title() if self.primer_apellido else self.primer_apellido
-        self.segundo_apellido = self.segundo_apellido.strip().title() if self.segundo_apellido else self.segundo_apellido
-
-        # Validar documento según tipo
-        if self.tipo_documento == self.TipoDocumento.CEDULA:
-            if self.documento and (len(str(self.documento)) < 6 or len(str(self.documento)) > 10):
-                raise ValidationError({'documento': 'La cédula debe tener entre 6 y 10 dígitos'})
-        elif self.tipo_documento == self.TipoDocumento.CEDULA_EXTRANJERIA:
-            if self.documento and (len(str(self.documento)) < 6 or len(str(self.documento)) > 12):
-                raise ValidationError({'documento': 'La cédula de extranjería debe tener entre 6 y 12 dígitos'})
-
-        # Validaciones específicas por rol
-        if self.rol == self.RolChoices.RECURSOS_HUMANOS and not self.departamento:
-            self.departamento = "Recursos Humanos"
-
-    def save(self, *args, **kwargs):
-        self.full_clean()
-        # Configurar permisos del usuario Django según el rol
-        if self.user:
-            self.user.is_staff = self.rol in [self.RolChoices.ADMINISTRADOR, self.RolChoices.RECURSOS_HUMANOS]
-            self.user.is_superuser = self.rol == self.RolChoices.ADMINISTRADOR
-            self.user.save()
-        super().save(*args, **kwargs)
-
+        self.primer_nombre= self.primer_nombre.title()
     def __str__(self):
-        return f"{self.primer_nombre} {self.primer_apellido} ({self.get_rol_display()})"
-
+        return f"{self.primer_nombre} {self.primer_apellido}"
     class Meta:
-        verbose_name = "Usuario"
-        verbose_name_plural = "Usuarios"
-        ordering = ['primer_apellido', 'primer_nombre']
-        db_table = 'usuarios'
-        permissions = [
-            ("can_manage_all_users", "Puede gestionar todos los usuarios"),
-            ("can_view_reports", "Puede ver reportes"),
-            ("can_manage_empleados", "Puede gestionar empleados"),
-        ]
-
+        verbose_name_plural="Usuarios"
     @property
     def full_name(self):
-        return f"{self.primer_nombre} {self.segundo_nombre or ''} {self.primer_apellido} {self.segundo_apellido or ''}".strip()
-
-    @property
-    def edad(self):
-        today = datetime.today().date()
-        return today.year - self.fecha_nacimiento.year - ((today.month, today.day) < (self.fecha_nacimiento.month, self.fecha_nacimiento.day))
-
-    # Métodos de verificación de roles
-    def es_administrador(self):
-        return self.rol == self.RolChoices.ADMINISTRADOR
-
-    def es_empleado(self):
-        return self.rol == self.RolChoices.EMPLEADO
-
-    def es_recursos_humanos(self):
-        return self.rol == self.RolChoices.RECURSOS_HUMANOS
-
-    def puede_gestionar_usuarios(self):
-        return self.rol in [self.RolChoices.ADMINISTRADOR, self.RolChoices.RECURSOS_HUMANOS]
-
-    def get_imagen_url(self):
-        return self.imagen.url if self.imagen and hasattr(self.imagen, 'url') else '/media/comunidad/default-user.jpeg'
+        if self.segundo_nombre:
+            return f"{self.primer_nombre} {self.segundo_nombre} {self.primer_apellido} {self.segundo_apellido}"
+        else:
+            return f"{self.primer_nombre} {self.primer_apellido} {self.segundo_apellido}"
+    def usuario_activo(self):
+        if self.estado:
+            return Usuario.objects.filter(usuario=self, estado=True)
+        else:
+            return Usuario.objects.none()
 
 class RegistroHoras(models.Model):
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -129,12 +68,8 @@ class RegistroHoras(models.Model):
         return self.fecha.weekday() == 6  # domingo es el día 6
 
     def es_festivo(self):
-        festivos = [
-            datetime(2023, 1, 1).date(),  # Año Nuevo
-            datetime(2023, 5, 1).date(),  # Día del Trabajo
-            # Añadir más festivos
-        ]
-        return self.fecha in festivos
+        colombia_holidays = holidays.Colombia()
+        return self.fecha in colombia_holidays  # Verifica si la fecha es festiva
 
     def calcular_horas(self):
         entrada = datetime.combine(self.fecha, self.hora_entrada)

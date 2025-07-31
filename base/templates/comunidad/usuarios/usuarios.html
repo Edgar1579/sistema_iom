@@ -1,6 +1,7 @@
 {% extends 'partials/admin/body.html' %}
 {% load crispy_forms_tags %}
 {% load bootstrap_icons %}
+{% load static %}
 
 {% block contenido %}
 
@@ -40,9 +41,13 @@
           {% for usuario in usuarios %}
             {% if usuario.estado %}
               <tr>
-                <td>
-                  <img src="{{ usuario.get_imagen_url }}" class="img-circle elevation-2" alt="User Image" width="60" />
-                </td>
+                   <td>
+       {% if usuario.imagen %}
+           <img src="{{ usuario.imagen.url }}" class="img-circle elevation-2" alt="User  Image" width="60" />
+       {% else %}
+           <img src="{% static 'media\comunidad\default-user.jpeg' %}" class="img-circle elevation-2" alt="Default User Image" width="60" />
+       {% endif %}
+   </td>
                 <td>{{ usuario.primer_nombre }}</td>
                 <td>{{ usuario.segundo_nombre }}</td>
                 <td>{{ usuario.primer_apellido }}</td>

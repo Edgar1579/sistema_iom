@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block contenido %}
+  <h2>Mis Registros de Horas</h2>
+
+  {% if registros %}
+    <table border="1" cellpadding="6" cellspacing="0">
+      <thead>
+        <tr>
+          <th>Fecha</th>
+          <th>Entrada</th>
+          <th>Salida</th>
+          <th>Horas Diurnas</th>
+          <th>Horas Nocturnas</th>
+          <th>Extras Diurnas</th>
+          <th>Extras Nocturnas</th>
+          <th>Recargo Nocturno</th>
+          <th>Recargo Dominical</th>
+          <th>Recargo Festivo</th>
+          <th>Pago Total Estimado</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in registros %}
+        <tr>
+          <td>{{ r.fecha }}</td>
+          <td>{{ r.hora_entrada }}</td>
+          <td>{{ r.hora_salida }}</td>
+          <td>{{ r.horas_normales_diurnas|floatformat:2 }}</td>
+          <td>{{ r.horas_normales_nocturnas|floatformat:2 }}</td>
+          <td>{{ r.horas_extras_diurnas|floatformat:2 }}</td>
+          <td>{{ r.horas_extras_nocturnas|floatformat:2 }}</td>
+          <td>{{ r.recargo_nocturno|floatformat:2 }}</td>
+          <td>{{ r.recargo_dominical|floatformat:2 }}</td>
+          <td>{{ r.recargo_festivo|floatformat:2 }}</td>
+          <td>${{ r.calcular_pago_total|floatformat:2 }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>No tienes registros de horas aún.</p>
+  {% endif %}
+{% endblock %}

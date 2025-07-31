@@ -67,3 +67,44 @@
   margin: 20px;
 }
 
+/* Estilo para contraste alto */
+body.high-contrast {
+    background-color: #000 !important;
+    color: #FFF !important;
+}
+
+body.high-contrast a {
+    color: #FFFF00 !important;
+}
+
+/* Estilos para los botones */
+.widget-container {
+    position: fixed;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1000;
+    background: rgba(255,255,255,0.9);
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+}
+
+.menu-conf-font button,
+.menu-contraste button {
+    display: block;
+    width: 100%;
+    margin: 5px 0;
+    padding: 8px 15px;
+    background: #0073aa;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.menu-conf-font button:hover,
+.menu-contraste button:hover {
+    background: #005177;
+}

@@ -1,18 +1,41 @@
-<!-- comunidad/templates/comunidad/horas/registro_horario_form.html -->
 {% extends 'base.html' %}
-
-
 {% load crispy_forms_tags %}
 {% load bootstrap_icons %}
 {% load static %}
 {% block contenido %}
-<div class="container mt-4">
-    <h1>Registrar Horas Trabajadas</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-success">Guardar</button>
-        <a href="{% url 'registro_horario_list' %}" class="btn btn-secondary">Cancelar</a>
-    </form>
+<div class="container mt-4">    
+
+    <h1>{{ titulo }}</h1>
+    <a href="{% url 'registro_horario_create' %}" class="btn btn-primary mb-3">Registrar Nueva Hora</a>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Usuario</th>
+                <th>Fecha</th>
+                <th>Hora de Entrada</th>
+                <th>Hora de Salida</th>
+                <th>Horas Extras Diurnas</th>
+                <th>Horas Extras Nocturnas</th>
+                <th>Total Horas Extras</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for registro in registros %}
+            <tr>
+                <td>{{ registro.usuario.username }}</td>
+                <td>{{ registro.fecha }}</td>
+                <td>{{ registro.hora_entrada }}</td>
+                <td>{{ registro.hora_salida }}</td>
+                <td>{{ registro.horas_extras_diurnas }}</td>
+                <td>{{ registro.horas_extras_nocturnas }}</td>
+                <td>{{ registro.horas_extras_diurnas|add:registro.horas_extras_nocturnas }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7">No hay registros de horas.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
 {% endblock %}

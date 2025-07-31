@@ -1,55 +1,57 @@
-from dataclasses import field
 from django import forms
-from django.forms import ModelForm, widgets
+from django.forms import ModelChoiceField, ModelForm, widgets
 from comunidad.models import Usuario, RegistroHoras, SolicitudPermiso
+from django.contrib.auth.models import Group, Permission
+from django.contrib.admin.widgets import FilteredSelectMultiple
+ 
 
 class UsuarioForm(ModelForm):
+    rol= ModelChoiceField(
+        queryset=Group.objects.all(),
+        label="Rol",
+    )
     class Meta:
-        model = Usuario
-        fields = "__all__"
-        exclude = ["estado", "user"]
-        widgets = {
-            'fecha_nacimiento': widgets.DateInput(attrs={'type': 'date'}, format='%Y-%m-%d'),
-            'fecha_ingreso': widgets.DateInput(attrs={'type': 'date'}, format='%Y-%m-%d')
+        model= Usuario
+        fields= "__all__"
+        exclude=["estado","user"]
+        widgets={
+            'fecha_nacimiento':widgets.DateInput(attrs={'type':'date'},format='%Y-%m-%d')
         }
 
 class UsuarioEditarForm(ModelForm):
+    rol= ModelChoiceField(
+        queryset=Group.objects.all(), 
+        label="Rol",
+    )
     class Meta:
-        model = Usuario
-        fields = "__all__"
-        exclude = ["estado", "user", "documento", "fecha_nacimiento"]
-        # Widget personalizado para el campo de fecha (si lo necesitas)
-        widgets = {
-            'fecha_ingreso': forms.DateInput(attrs={'type': 'date'}, format='%Y-%m-%d')
-        }
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # Remueve completamente los campos excluidos del formulario
-        for field_name in self.Meta.exclude:
-            if field_name in self.fields:
-                del self.fields[field_name]
-
-field
+        model= Usuario
+        fields= "__all__"
+        exclude=["estado","fecha_nacimiento", "documento","user"]
 
 
-class RegistroHorasForm(ModelForm):
+class GroupForm(ModelForm):
+    permissions = forms.ModelMultipleChoiceField(
+        queryset=Permission.objects.all(),
+        widget=FilteredSelectMultiple('Permissions', False),
+        required=False,
+    )
+    class Meta:
+        model = Group
+        fields = ['name','permissions'] 
+
+from django import forms
+from .models import RegistroHoras
+
+class RegistroHorasForm(forms.ModelForm):
     class Meta:
         model = RegistroHoras
-        fields = ['usuario', 'fecha', 'hora_entrada', 'hora_salida']
+        fields = ['fecha', 'hora_entrada', 'hora_salida']
         widgets = {
-            'fecha': forms.DateInput(attrs={
-                'type': 'date', 
-                'class': 'form-control'
-            }),
-            'hora_entrada': forms.TimeInput(attrs={
-                'type': 'time',
-                'class': 'form-control'
-            }),
-            'hora_salida': forms.TimeInput(attrs={
-                'type': 'time',
-                'class': 'form-control'
-            }),
+            'fecha': forms.DateInput(attrs={'type': 'date'}),
+            'hora_entrada': forms.TimeInput(attrs={'type': 'time'}),
+            'hora_salida': forms.TimeInput(attrs={'type': 'time'}),
         }
+
 
 class SolicitudPermisoForm(ModelForm):
     class Meta:

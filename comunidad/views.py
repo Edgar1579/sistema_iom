@@ -1,13 +1,16 @@
-from django.db import models
-from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.models import Group
+from comunidad.forms import UsuarioForm, UsuarioEditarForm, RegistroHorasForm, SolicitudPermisoForm, ActualizarDatosForm, GroupForm
+from comunidad.models import Usuario, RegistroHoras, SolicitudPermiso, CalculoJornada
+from django.contrib import messages
+from django.contrib.auth.hashers import make_password
+from PIL import Image
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.hashers import make_password
-from comunidad.models import Usuario, RegistroHoras, SolicitudPermiso, CalculoJornada
-from comunidad.forms import UsuarioForm, UsuarioEditarForm, RegistroHorasForm, SolicitudPermisoForm, ActualizarDatosForm
 from datetime import datetime
 from django.core.paginator import Paginator
+
+
 
 def usuario_crear(request):
     titulo = "Usuario"
@@ -56,18 +59,19 @@ def usuario_crear(request):
     return render(request, "comunidad/usuarios/usuarios.html", context)
 
 
+
 def usuario_eliminar(request, pk):
     usuario = Usuario.objects.filter(id=pk)
     usuario.update(estado=False)
     
     messages.success(request, "Usuario eliminado correctamente.")
     return redirect('usuarios')
-
 def usuario_editar(request, pk):
     usuario = Usuario.objects.get(id=pk)
     usuarios = Usuario.objects.all()
-    titulo = f"Usuario {usuario.id} {usuario.primer_nombre} {usuario.primer_apellido}"
-    accion = "Actualizar"
+    accion="Editar"
+    nombre=f"{usuario.primer_nombre} {usuario.primer_apellido}"
+    titulo=f"Usuario {nombre}"
 
     if request.method == "POST":
         form = UsuarioEditarForm(request.POST, request.FILES, instance=usuario)
@@ -111,61 +115,44 @@ def usuario_editar(request, pk):
     }
     return render(request, "comunidad/usuarios/usuarios.html", context)
 
-@login_required
-def lista_registro_horario(request):
-    registros = RegistroHoras.objects.filter(usuario=request.user)
-    return render(request, 'comunidad/horas/registro_horario_list.html', {'registros': registros})
+
+def edit_group(request, group_id=None):
+    groups = Group.objects.all()
+    if group_id:
+        group = get_object_or_404(Group, id=group_id)
+    else:
+        group = None
+
+    if request.method == 'POST':
+        form = GroupForm(request.POST, instance=group)
+        if form.is_valid():
+            form.save()
+            return redirect('edit_group',group_id)  # Cambia 'list_groups' por el nombre de la URL donde se listan los grupos
+    else:
+        form = GroupForm(instance=group)
+    context={
+    'groups':groups,
+    'group': group,
+    'form': form
+    }
+    return render(request, 'comunidad/usuarios/grupos.html', context)                        
 
 @login_required
-def crear_registro_horario(request):
+def registrar_horas(request):
     if request.method == 'POST':
         form = RegistroHorasForm(request.POST)
         if form.is_valid():
             registro = form.save(commit=False)
             registro.usuario = request.user
-            
-            # Validar que la hora de salida sea posterior a la hora de entrada
-            if registro.hora_salida <= registro.hora_entrada:
-                messages.error(request, "La hora de salida debe ser posterior a la hora de entrada.")
-                return render(request, 'comunidad/horas/registro_horario_form.html', {'form': form})
-
-            try:
-                # Usar la clase CalculoJornada para calcular horas y recargos
-                calculo = CalculoJornada(registro.fecha, registro.hora_entrada, registro.hora_salida)
-                resultados = calculo.obtener_resultados()
-
-                # Asignar los resultados al registro
-                registro.horas_normales_diurnas = resultados['horas_normales_diurnas']
-                registro.horas_normales_nocturnas = resultados['horas_normales_nocturnas']
-                registro.horas_extras_diurnas = resultados['horas_extras_diurnas']
-                registro.horas_extras_nocturnas = resultados['horas_extras_nocturnas']
-                registro.recargo_dominical = resultados['recargo_dominical']
-                registro.recargo_festivo = resultados['recargo_festivo']
-                registro.recargo_nocturno = resultados['recargo_nocturno']
-
-                # Guardar el registro
-                registro.save()
-                messages.success(request, "Registro de horario creado exitosamente.")
-                return redirect('registro_horario_list')
-            except Exception as e:
-                messages.error(request, f"Error al calcular los resultados: {str(e)}")
-        else:
-            messages.error(request, "Error al crear el registro de horario. Por favor, verifica los datos.")
+            registro.save()
+            return redirect('lista_registros')
     else:
         form = RegistroHorasForm()
-    
-    return render(request, 'comunidad/horas/registro_horario_form.html', {'form': form})
-
+    return render(request, 'comunidad/horas/registrar_horas.html', {'form': form})
 @login_required
-def detalle_pago(request, registro_id):
-    registro = get_object_or_404(RegistroHoras, id=registro_id, usuario=request.user)
-    pago_total = registro.calcular_pago_total()
-    
-    return render(request, 'detalle_pago.html', {
-        'registro': registro,
-        'pago_total': pago_total
-    })
-
+def lista_registros(request):
+    registros = RegistroHoras.objects.filter(usuario=request.user).order_by('-fecha')
+    return render(request, 'comunidad/horas/lista_registros.html', {'registros': registros})
 @login_required
 def lista_solicitud_permiso(request):
     solicitudes = SolicitudPermiso.objects.filter(usuario=request.user)
