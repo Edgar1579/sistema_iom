@@ -1,7 +1,9 @@
+from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import Group
-from comunidad.forms import UsuarioForm, UsuarioEditarForm, RegistroHorasForm, SolicitudPermisoForm, ActualizarDatosForm, GroupForm
-from comunidad.models import Usuario, RegistroHoras, SolicitudPermiso, CalculoJornada
+import holidays
+from comunidad.forms import UsuarioForm, UsuarioEditarForm, RegistroHorasForm, SolicitudPermisoForm, GroupForm
+from comunidad.models import Usuario, RegistroHoras, SolicitudPermiso
 from django.contrib import messages
 from django.contrib.auth.hashers import make_password
 from PIL import Image
@@ -137,6 +139,7 @@ def edit_group(request, group_id=None):
     }
     return render(request, 'comunidad/usuarios/grupos.html', context)                        
 
+
 @login_required
 def registrar_horas(request):
     if request.method == 'POST':
@@ -148,11 +151,38 @@ def registrar_horas(request):
             return redirect('lista_registros')
     else:
         form = RegistroHorasForm()
-    return render(request, 'comunidad/horas/registrar_horas.html', {'form': form})
+    return render(request, 'comunidad/horas/registrar.html', {'form': form})
+
+
+@login_required
+def panel_inicio(request):
+    return render(request, 'comunidad/horas/panel_inicio.html', {'titulo': 'Panel de Inicio'})
 @login_required
 def lista_registros(request):
     registros = RegistroHoras.objects.filter(usuario=request.user).order_by('-fecha')
-    return render(request, 'comunidad/horas/lista_registros.html', {'registros': registros})
+    return render(request, 'comunidad/horas/lista.html', {'registros': registros})
+
+@login_required
+def detalle_registro(request, pk):
+    registro = get_object_or_404(RegistroHoras, pk=pk, usuario=request.user)
+    return render(request, 'comunidad/horas/detalle.html', {'registro': registro})
+
+def verificar_tipo_dia(request):
+    fecha_str = request.GET.get('fecha')
+    if fecha_str:
+        try:
+            fecha = datetime.strptime(fecha_str, '%Y-%m-%d').date()
+            festivos = holidays.Colombia()
+            es_festivo = fecha in festivos
+            es_domingo = fecha.weekday() == 6
+            return JsonResponse({
+                'es_festivo': es_festivo,
+                'es_domingo': es_domingo,
+                'tipo': 'Festivo' if es_festivo else 'Domingo' if es_domingo else 'Normal'
+            })
+        except ValueError:
+            pass
+    return JsonResponse({'error': 'Fecha inválida'}, status=400)
 @login_required
 def lista_solicitud_permiso(request):
     solicitudes = SolicitudPermiso.objects.filter(usuario=request.user)
@@ -194,7 +224,7 @@ def registrar_permiso(request):
         form = SolicitudPermisoForm()
     return render(request, 'comunidad/registrar_permiso.html', {'form': form})
 
-@login_required
+""" @login_required
 def actualizar_datos(request):
     if request.method == 'POST':
         form = ActualizarDatosForm(request.POST, instance=request.user)
@@ -204,8 +234,6 @@ def actualizar_datos(request):
             return redirect('comunidad:dashboard_empleado')
     else:
         form = ActualizarDatosForm(instance=request.user)
-    return render(request, 'comunidad/actualizar_datos.html', {'form': form})
+    return render(request, 'comunidad/actualizar_datos.html', {'form': form}) """
 
-@login_required
-def registro_horas(request):
-    return render(request, 'comunidad/registro_horas.html')
+

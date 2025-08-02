@@ -3,8 +3,8 @@ from django.forms import ModelChoiceField, ModelForm, widgets
 from comunidad.models import Usuario, RegistroHoras, SolicitudPermiso
 from django.contrib.auth.models import Group, Permission
 from django.contrib.admin.widgets import FilteredSelectMultiple
- 
-
+from decimal import Decimal
+from django.core.exceptions import ValidationError
 class UsuarioForm(ModelForm):
     rol= ModelChoiceField(
         queryset=Group.objects.all(),
@@ -39,8 +39,8 @@ class GroupForm(ModelForm):
         model = Group
         fields = ['name','permissions'] 
 
-from django import forms
-from .models import RegistroHoras
+
+
 
 class RegistroHorasForm(forms.ModelForm):
     class Meta:
@@ -51,7 +51,6 @@ class RegistroHorasForm(forms.ModelForm):
             'hora_entrada': forms.TimeInput(attrs={'type': 'time'}),
             'hora_salida': forms.TimeInput(attrs={'type': 'time'}),
         }
-
 
 class SolicitudPermisoForm(ModelForm):
     class Meta:
@@ -65,17 +64,3 @@ class SolicitudPermisoForm(ModelForm):
            
         }
         
-class ActualizarDatosForm(forms.ModelForm):
-    class Meta:
-        model = Usuario
-        fields = ['primer_nombre', 'segundo_nombre', 'primer_apellido', 'segundo_apellido', 'correo', 'telefono', 'departamento', 'cargo']
-        widgets = {
-            'primer_nombre': forms.TextInput(attrs={'class': 'form-control'}),
-            'segundo_nombre': forms.TextInput(attrs={'class': 'form-control'}),
-            'primer_apellido': forms.TextInput(attrs={'class': 'form-control'}),
-            'segundo_apellido': forms.TextInput(attrs={'class': 'form-control'}),
-            'correo': forms.EmailInput(attrs={'class': 'form-control'}),
-            'telefono': forms.TextInput(attrs={'class': 'form-control'}),
-            'departamento': forms.TextInput(attrs={'class': 'form-control'}),
-            'cargo': forms.TextInput(attrs={'class': 'form-control'}),
-        }

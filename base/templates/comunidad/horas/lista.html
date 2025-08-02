@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block contenido %}
+<h2>Mis Registros</h2>
+<table border="1">
+    <thead>
+        <tr>
+            <th>Fecha</th>
+            <th>Entrada</th>
+            <th>Salida</th>
+            <th>Pago Total</th>
+            <th>Detalles</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for registro in registros %}
+        <tr>
+            <td>{{ registro.fecha }}</td>
+            <td>{{ registro.hora_entrada }}</td>
+            <td>{{ registro.hora_salida }}</td>
+            <td>${{ registro.pago_total }}</td>
+            <td><a href="{% url 'detalle_registro' registro.pk %}">Ver</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<a href="{% url 'registrar' %}">Registrar nuevo</a>
+{% endblock %}

@@ -1,15 +1,10 @@
 {% extends 'base.html' %}
-{% load crispy_forms_tags %}
-{% load bootstrap_icons %}
-{% load static %}
-
-
-
 {% block contenido %}
-  <h2>Registrar Horas</h2>
-  <form method="post">
+<h2>Registrar Horas</h2>
+<form method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit">Guardar</button>
-  </form>
+</form>
+<a href="{% url 'lista_registros' %}">Ver mis registros</a>
 {% endblock %}

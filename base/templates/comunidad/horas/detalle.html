@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block contenido %}
+<h2>Detalle del Registro</h2>
+<p><strong>Fecha:</strong> {{ registro.fecha }}</p>
+<p><strong>Hora entrada:</strong> {{ registro.hora_entrada }}</p>
+<p><strong>Hora salida:</strong> {{ registro.hora_salida }}</p>
+
+<h3>Horas calculadas</h3>
+<ul>
+    <li>Normales diurnas: {{ registro.horas_normales_diurnas }}</li>
+    <li>Normales nocturnas: {{ registro.horas_normales_nocturnas }}</li>
+    <li>Extras diurnas: {{ registro.horas_extras_diurnas }}</li>
+    <li>Extras nocturnas: {{ registro.horas_extras_nocturnas }}</li>
+    <li>Recargo nocturno: {{ registro.recargo_nocturno }}</li>
+    <li>Recargo dominical: {{ registro.recargo_dominical }}</li>
+    <li>Recargo festivo: {{ registro.recargo_festivo }}</li>
+</ul>
+
+<h3>Pago total: ${{ registro.pago_total }}</h3>
+<a href="{% url 'lista_registros' %}">Volver</a>
+{% endblock %}

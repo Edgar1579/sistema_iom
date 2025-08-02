@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block contenido %}
+
+<div class="container">
+  <div class="row custom-row mt-4">
+    <div class="col-md-6 mb-4">
+      <div class="card h-100 text-center">
+        <div class="card-body">
+          <i class="fas fa-clock fa-3x mb-3 text-primary"></i>
+          <h4 class="card-title">Registro de Horas</h4>
+          <p class="card-text">Registra tus horas trabajadas diariamente.</p>
+          <a href="{% url 'registrar' %}" class="btn btn-primary btn-lg w-100">
+            Registrar Horas
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 mb-4">
+      <div class="card h-100 text-center">
+        <div class="card-body">
+          <i class="fas fa-calendar-check fa-3x mb-3 text-warning"></i>
+          <h4 class="card-title">Solicitud de Permisos</h4>
+          <p class="card-text">Solicita permisos o días libres.</p>
+          <a href="{% url 'solicitud_permiso_create' %}" class="btn btn-warning btn-lg w-100">
+            Solicitar Permiso
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="text-center my-4">
+    <a href="{% url 'index' %}" class="btn btn-secondary btn-lg">
+      <i class="bi bi-house-door-fill"></i> Regresar al Inicio
+    </a>
+  </div>
+</div>
+
+{% endblock contenido %}
