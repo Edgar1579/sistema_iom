@@ -42,15 +42,41 @@ class GroupForm(ModelForm):
 
 
 
+# forms.py
+
+from django import forms
+from .models import RegistroHoras
+import holidays
+
 class RegistroHorasForm(forms.ModelForm):
     class Meta:
         model = RegistroHoras
         fields = ['fecha', 'hora_entrada', 'hora_salida']
-        widgets = {
-            'fecha': forms.DateInput(attrs={'type': 'date'}),
-            'hora_entrada': forms.TimeInput(attrs={'type': 'time'}),
-            'hora_salida': forms.TimeInput(attrs={'type': 'time'}),
+        widgets={
+            'fecha':widgets.DateInput(attrs={'type':'date'},format='%Y-%m-%d'),
+            'hora_entrada': widgets.TimeInput(attrs={'type': 'time'}),
+            'hora_salida': widgets.TimeInput(attrs={'type': 'time'})
+           
         }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        fecha = cleaned_data.get('fecha')
+
+        if fecha:
+            msg = []
+            if fecha.weekday() == 6:
+                msg.append("La fecha seleccionada es un DOMINGO.")
+            
+            colombia_holidays = holidays.Colombia(years=fecha.year)
+            if fecha in colombia_holidays:
+                msg.append("La fecha seleccionada es un FESTIVO en Colombia.")
+
+            if msg:
+                self.add_error('fecha', " ".join(msg))
+
+        return cleaned_data
+
 
 class SolicitudPermisoForm(ModelForm):
     class Meta:

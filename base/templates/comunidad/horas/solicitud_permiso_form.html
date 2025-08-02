@@ -1,6 +1,5 @@
 <!-- comunidad/templates/comunidad/horas/solicitud_permiso_form.html -->
-{% extends 'base.html' %}
-
+{% extends 'partials/body.html' %} 
 
 {% load crispy_forms_tags %}
 {% load bootstrap_icons %}
@@ -11,8 +10,15 @@
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit" class="btn btn-success">Enviar Solicitud</button>
-        <a href="{% url 'solicitud_permiso_list' %}" class="btn btn-secondary">Cancelar</a>
+
+<button type="submit" class="btn btn-success" data-bs-toggle="tooltip" title="Enviar esta solicitud de permiso">
+  Enviar Solicitud
+</button>
+
+
+<a href="{% url 'solicitud_permiso_list' %}" class="btn btn-secondary" data-bs-toggle="tooltip" title="Cancelar y volver a la lista de solicitudes">
+  Cancelar
+</a>
     </form>
 </div>
 {% endblock %}

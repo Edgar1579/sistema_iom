@@ -1,10 +1,17 @@
-{% extends 'base.html' %}
+{% extends 'partials/body.html' %} 
 {% block contenido %}
 <h2>Registrar Horas</h2>
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit">Guardar</button>
+   <button type="submit" class="btn btn-success" data-bs-toggle="tooltip" title="Guardar el registro de horas">
+  Guardar
+</button>
+    <a href="{% url 'lista_registros' %}" class="btn btn-secondary" data-bs-toggle="tooltip" title="Cancelar y volver a la lista">
+  Cancelar
+</a>
 </form>
-<a href="{% url 'lista_registros' %}">Ver mis registros</a>
+<a href="{% url 'lista_registros' %}" data-bs-toggle="tooltip" title="Ver todos tus registros anteriores">
+  Ver mis registros
+</a>
 {% endblock %}

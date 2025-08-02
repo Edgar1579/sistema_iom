@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'partials/body.html' %} 
 {% block contenido %}
 <h2>Mis Registros</h2>
 <table border="1">
@@ -18,10 +18,12 @@
             <td>{{ registro.hora_entrada }}</td>
             <td>{{ registro.hora_salida }}</td>
             <td>${{ registro.pago_total }}</td>
-            <td><a href="{% url 'detalle_registro' registro.pk %}">Ver</a></td>
+            <td><a href="{% url 'detalle_registro' registro.pk %}" data-bs-toggle="tooltip" title="Ver detalles del registro">Ver</a></td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
-<a href="{% url 'registrar' %}">Registrar nuevo</a>
+<a href="{% url 'registrar' %}" data-bs-toggle="tooltip" title="Crear un nuevo registro de horas">
+  Registrar nuevo
+</a>
 {% endblock %}
