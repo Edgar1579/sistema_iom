@@ -41,9 +41,11 @@
           <i class="bi bi-person-circle" style="font-size: 32px;"></i>
         </a>
         <ul class="dropdown-menu text-small">
-          <li><a class="dropdown-item" href="{% url 'login' %}">Acceder</a></li>
-
-          <li><a class="dropdown-item" href="#">Sign out</a></li>
+          <li><a class="dropdown-item" href="{% url 'login' %}">Ingresar</a></li>
+          <li><a class="dropdown-item" href="{% url 'logout' %}">Cerrar sesión</a></li>
+          <!-- <li class="nav-item d-none d-sm-inline-block">
+        <a href="/logout/" class="nav-link">Salir</a>
+      </li> -->
         </ul>
       </div>
     </div>

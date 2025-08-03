@@ -3,15 +3,35 @@
 <h2>Registrar Horas</h2>
 <form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
-   <button type="submit" class="btn btn-success" data-bs-toggle="tooltip" title="Guardar el registro de horas">
-  Guardar
-</button>
+    
+    <div class="form-group">
+        <label>Usuario:</label>
+        <input type="text" 
+               value="{{ request.user.get_full_name }}" 
+               disabled
+               class="form-control">
+    </div>
+    
+    <div class="form-group">
+        <label>Número de Documento:</label>
+        <input type="text" 
+               value="{{ form.numero_documento.value }}" 
+               disabled
+               class="form-control">
+    </div>
+    
+    {{ form.fecha.label_tag }} {{ form.fecha }}  <!-- Muestra el campo de fecha -->
+    {{ form.hora_entrada.label_tag }} {{ form.hora_entrada }}  <!-- Muestra el campo de hora de entrada -->
+    {{ form.hora_salida.label_tag }} {{ form.hora_salida }}  <!-- Muestra el campo de hora de salida -->
+    
+    <button type="submit" class="btn btn-success" data-bs-toggle="tooltip" title="Guardar el registro de horas">
+        Guardar
+    </button>
     <a href="{% url 'lista_registros' %}" class="btn btn-secondary" data-bs-toggle="tooltip" title="Cancelar y volver a la lista">
-  Cancelar
-</a>
+        Cancelar
+    </a>
 </form>
 <a href="{% url 'lista_registros' %}" data-bs-toggle="tooltip" title="Ver todos tus registros anteriores">
-  Ver mis registros
+    Ver mis registros
 </a>
 {% endblock %}

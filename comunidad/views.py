@@ -12,8 +12,6 @@ from django.contrib.auth.decorators import login_required
 from datetime import datetime
 from django.core.paginator import Paginator
 
-
-
 def usuario_crear(request):
     titulo = "Usuario"
     accion = "Agregar"
@@ -60,20 +58,19 @@ def usuario_crear(request):
     }
     return render(request, "comunidad/usuarios/usuarios.html", context)
 
-
-
 def usuario_eliminar(request, pk):
     usuario = Usuario.objects.filter(id=pk)
     usuario.update(estado=False)
     
     messages.success(request, "Usuario eliminado correctamente.")
     return redirect('usuarios')
+
 def usuario_editar(request, pk):
     usuario = Usuario.objects.get(id=pk)
     usuarios = Usuario.objects.all()
-    accion="Editar"
-    nombre=f"{usuario.primer_nombre} {usuario.primer_apellido}"
-    titulo=f"Usuario {nombre}"
+    accion = "Editar"
+    nombre = f"{usuario.primer_nombre} {usuario.primer_apellido}"
+    titulo = f"Usuario {nombre}"
 
     if request.method == "POST":
         form = UsuarioEditarForm(request.POST, request.FILES, instance=usuario)
@@ -117,7 +114,6 @@ def usuario_editar(request, pk):
     }
     return render(request, "comunidad/usuarios/usuarios.html", context)
 
-
 def edit_group(request, group_id=None):
     groups = Group.objects.all()
     if group_id:
@@ -129,34 +125,47 @@ def edit_group(request, group_id=None):
         form = GroupForm(request.POST, instance=group)
         if form.is_valid():
             form.save()
-            return redirect('edit_group',group_id)  # Cambia 'list_groups' por el nombre de la URL donde se listan los grupos
+            return redirect('edit_group', group_id)  # Cambia 'list_groups' por el nombre de la URL donde se listan los grupos
     else:
         form = GroupForm(instance=group)
-    context={
-    'groups':groups,
-    'group': group,
-    'form': form
+    context = {
+        'groups': groups,
+        'group': group,
+        'form': form
     }
-    return render(request, 'comunidad/usuarios/grupos.html', context)                        
-
+    return render(request, 'comunidad/usuarios/grupos.html', context)
 
 @login_required
 def registrar_horas(request):
+    # Obtén el objeto Usuario asociado al usuario logueado
+    try:
+        usuario = Usuario.objects.get(user=request.user)  # Asegúrate de que el usuario tenga un objeto Usuario asociado
+    except Usuario.DoesNotExist:
+        messages.error(request, "No se encontró el usuario asociado.")
+        return redirect('lista_registros')  # Redirige a una página adecuada si no se encuentra el usuario
+
     if request.method == 'POST':
-        form = RegistroHorasForm(request.POST)
+        form = RegistroHorasForm(request.POST, usuario=request.user)
         if form.is_valid():
-            registro = form.save(commit=False)
-            registro.usuario = request.user
-            registro.save()
+            registro = form.save(commit=False)  # No guardes aún, primero asigna el usuario
+            registro.usuario = usuario  # Asigna el objeto Usuario al registro
+            registro.save()  # Ahora guarda el registro
             return redirect('lista_registros')
     else:
-        form = RegistroHorasForm()
-    return render(request, 'comunidad/horas/registrar.html', {'form': form})
+        form = RegistroHorasForm(usuario=request.user)
+
+    return render(request, 'comunidad/horas/registrar.html', {
+        'form': form,
+        'numero_documento': usuario.documento  # Pasa el número de documento al template
+    })
+
+
 
 
 @login_required
 def panel_inicio(request):
     return render(request, 'comunidad/horas/panel_inicio.html', {'titulo': 'Panel de Inicio'})
+
 @login_required
 def lista_registros(request):
     registros = RegistroHoras.objects.filter(usuario=request.user).order_by('-fecha')
@@ -183,6 +192,7 @@ def verificar_tipo_dia(request):
         except ValueError:
             pass
     return JsonResponse({'error': 'Fecha inválida'}, status=400)
+
 @login_required
 def lista_solicitud_permiso(request):
     solicitudes = SolicitudPermiso.objects.filter(usuario=request.user)
@@ -223,17 +233,3 @@ def registrar_permiso(request):
     else:
         form = SolicitudPermisoForm()
     return render(request, 'comunidad/registrar_permiso.html', {'form': form})
-
-""" @login_required
-def actualizar_datos(request):
-    if request.method == 'POST':
-        form = ActualizarDatosForm(request.POST, instance=request.user)
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Datos actualizados exitosamente.")
-            return redirect('comunidad:dashboard_empleado')
-    else:
-        form = ActualizarDatosForm(instance=request.user)
-    return render(request, 'comunidad/actualizar_datos.html', {'form': form}) """
-
-
