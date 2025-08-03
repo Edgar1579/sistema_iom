@@ -18,10 +18,29 @@
 </div>  
         
 </head>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <!-- Logo/Marca aquí -->
+       <link rel="shortcut icon" href="{% static 'images/logoiom.png' %}"
+    type="image/x-icon">
+    
+    <div class="collapse navbar-collapse">
+      <ul class="navbar-nav ms-auto"> <!-- Alineación derecha -->
+        <li class="nav-item">
+          <a href="{% url 'index' %}" class="btn btn-primary">Inicio</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
 <body class="hold-transition dark-mode login-page">
+    
     {% block contenido %}   
          
     {% endblock contenido %}
+
 
 
 

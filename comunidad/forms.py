@@ -5,6 +5,9 @@ from django.contrib.auth.models import Group, Permission
 from django.contrib.admin.widgets import FilteredSelectMultiple
 from decimal import Decimal
 from django.core.exceptions import ValidationError
+import holidays
+
+
 class UsuarioForm(ModelForm):
     rol= ModelChoiceField(
         queryset=Group.objects.all(),
@@ -42,22 +45,31 @@ class GroupForm(ModelForm):
 
 
 
-# forms.py
-
-from django import forms
-from .models import RegistroHoras
-import holidays
 
 class RegistroHorasForm(forms.ModelForm):
+    numero_documento = forms.CharField(label="Número de Documento", required=False, disabled=True)
+
     class Meta:
         model = RegistroHoras
-        fields = ['fecha', 'hora_entrada', 'hora_salida']
-        widgets={
-            'fecha':widgets.DateInput(attrs={'type':'date'},format='%Y-%m-%d'),
-            'hora_entrada': widgets.TimeInput(attrs={'type': 'time'}),
-            'hora_salida': widgets.TimeInput(attrs={'type': 'time'})
-           
+        fields = ['numero_documento', 'fecha', 'hora_entrada', 'hora_salida']
+        widgets = {
+            'fecha': forms.DateInput(attrs={'type': 'date'}, format='%Y-%m-%d'),
+            'hora_entrada': forms.TimeInput(attrs={'type': 'time'}),
+            'hora_salida': forms.TimeInput(attrs={'type': 'time'}),
         }
+
+    def __init__(self, *args, **kwargs):
+        usuario = kwargs.pop('usuario', None)
+        super().__init__(*args, **kwargs)
+
+        if usuario:
+            # Obtén el objeto Usuario asociado al usuario logueado
+            try:
+                usuario_obj = Usuario.objects.get(user=usuario)
+                # Asigna el número de documento del usuario al campo
+                self.fields['numero_documento'].initial = usuario_obj.documento
+            except Usuario.DoesNotExist:
+                self.fields['numero_documento'].initial = ""  # Manejo de error si no se encuentra el usuario
 
     def clean(self):
         cleaned_data = super().clean()
@@ -78,10 +90,12 @@ class RegistroHorasForm(forms.ModelForm):
         return cleaned_data
 
 
-class SolicitudPermisoForm(ModelForm):
+
+class SolicitudPermisoForm(forms.ModelForm):
     class Meta:
         model = SolicitudPermiso
-        fields = ['fecha', 'hora_inicio', 'hora_fin', 'motivo']
+        fields = ['fecha', 'hora_inicio', 'hora_fin', 'motivo', 'documento_identidad']
+
         widgets = {
             'fecha': forms.DateInput(attrs={'type': 'date'}),
             'hora_inicio': forms.TimeInput(attrs={'type': 'time'}),
