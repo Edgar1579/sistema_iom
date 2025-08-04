@@ -1,0 +1,15 @@
+{% extends 'partials/admin/body.html' %}
+{% load static %}
+{% load bootstrap_icons %}
+{% load crispy_forms_tags %}
+{% load bootstrap_icons %}
+
+{% block content %}
+<h2>Confirmar Eliminación</h2>
+<p>¿Estás seguro de que deseas eliminar el anuncio "{{ anuncio.titulo }}"?</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Sí, Eliminar</button>
+    <a href="{% url 'anuncio_lista' %}" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}

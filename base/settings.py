@@ -40,7 +40,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'comunidad.middleware.AdminRequiredMiddleware',  # Agrega tu middleware aquí
+   # 'comunidad.middleware.AdminRequiredMiddleware',  # Agrega tu middleware aquí
 ]
 
 ROOT_URLCONF = 'base.urls'

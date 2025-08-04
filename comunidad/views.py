@@ -8,111 +8,107 @@ from django.contrib import messages
 from django.contrib.auth.hashers import make_password
 from PIL import Image
 from django.contrib.auth.models import User
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from datetime import datetime
-from django.core.paginator import Paginator
 
+# Create your views here.
+
+#@permission_required('comunidad.add_usuario', raise_exception=True)
 def usuario_crear(request):
-    titulo = "Usuario"
-    accion = "Agregar"
-    usuarios = Usuario.objects.all()
-
-    if request.method == "POST":
-        form = UsuarioForm(request.POST, request.FILES)
+    titulo="Usuario"
+    accion="Agregar"
+    usuarios= Usuario.objects.all()
+    if request.method=="POST":
+        form= UsuarioForm(request.POST,request.FILES)
         if form.is_valid():
-            documento = request.POST['documento']
-            correo = request.POST['correo']
-            primer_nombre = request.POST['primer_nombre']
-            primer_apellido = request.POST['primer_apellido']
-
-            # Crear el usuario de Django si no existe
-            user = User.objects.filter(username=documento).first()
-            if not user:
-                password = "@" + primer_nombre[0].lower() + primer_apellido[0].lower() + documento[-4:]
-                user = User.objects.create_user(
-                    username=documento,
-                    email=correo,
-                    password=password  # No es necesario usar make_password aquí
-                )
-                user.first_name = primer_nombre
-                user.last_name = primer_apellido
-                user.save()
-
-            # Guardar el Usuario personalizado
-            usuario = form.save(commit=False)
-            usuario.user = user
-            usuario.save()
-
-            messages.success(request, "Usuario creado exitosamente.")
-            return redirect('usuarios')
-        else:
-            messages.error(request, "Formulario inválido.")
-    else:
-        form = UsuarioForm()
-
-    context = {
-        "titulo": titulo,
-        "accion": accion,
-        "usuarios": usuarios,
-        "form": form,
-    }
-    return render(request, "comunidad/usuarios/usuarios.html", context)
-
-def usuario_eliminar(request, pk):
-    usuario = Usuario.objects.filter(id=pk)
-    usuario.update(estado=False)
-    
-    messages.success(request, "Usuario eliminado correctamente.")
-    return redirect('usuarios')
-
-def usuario_editar(request, pk):
-    usuario = Usuario.objects.get(id=pk)
-    usuarios = Usuario.objects.all()
-    accion = "Editar"
-    nombre = f"{usuario.primer_nombre} {usuario.primer_apellido}"
-    titulo = f"Usuario {nombre}"
-
-    if request.method == "POST":
-        form = UsuarioEditarForm(request.POST, request.FILES, instance=usuario)
-        if form.is_valid():
-            correo = request.POST['correo']
-            primer_nombre = request.POST['primer_nombre']
-            primer_apellido = request.POST['primer_apellido']
-
-            # Actualizar el usuario del modelo User
-            user = usuario.user
-            if user:
-                user.email = correo
-                user.first_name = primer_nombre
-                user.last_name = primer_apellido
+            if not User.objects.filter(username=request.POST['documento']):
+                user = User.objects.create_user('nombre','email@email','pass')
+                user.username= request.POST['documento']
+                user.first_name= request.POST['primer_nombre']
+                user.last_name= request.POST['primer_apellido']
+                user.email= request.POST['correo']
+                user.password=make_password("@" + request.POST['primer_nombre'][0] + request.POST['primer_apellido'][0] + request.POST['documento'][-4:])
                 user.save()
             else:
-                user = User.objects.create_user(
-                    email=correo,
-                    password=make_password(
-                        "@" + primer_nombre[0] + primer_apellido[0] 
-                    )
-                )
-                usuario.user = user
-
-            usuario = form.save(commit=False)
-            usuario.user = user
+                user=User.objects.get(username=request.POST['documento'])
+            rol_id = request.POST.get('rol')  # Obtén el ID del grupo seleccionado en el formulario
+            if rol_id:
+                rol = Group.objects.get(id=rol_id)
+                user.groups.add(rol)  # Asocia el usuario al grupo
+            usuario = Usuario.objects.create(
+                primer_nombre=request.POST['primer_nombre'],
+                segundo_nombre=request.POST['segundo_nombre'],
+                primer_apellido=request.POST['primer_apellido'],
+                segundo_apellido=request.POST['segundo_apellido'],
+                fecha_nacimiento=request.POST['fecha_nacimiento'],
+                imagen=request.FILES.get('imagen'),  # Asume que tu formulario maneja archivos
+                correo=request.POST['correo'],
+                tipo_documento=request.POST['tipo_documento'],
+                documento=request.POST['documento'],
+                user=user,
+                
+            )
+            messages.success(request, f'¡El Usuario se agregó de forma exitosa!')
+            if usuario.imagen:
+                 img = Image.open(usuario.imagen.path)
+                 img= img.resize((500,500))
+                 img.save(usuario.imagen.path)
             usuario.save()
+            return redirect('usuarios')
 
-            messages.success(request, "Usuario actualizado exitosamente.")
+        else:
+            messages.success(request, f'¡Error al agregar al Usuario!')
+            form = UsuarioForm(request.POST,request.FILES)
+    else:
+        form=UsuarioForm()
+    context={
+        "titulo":titulo,
+        "usuarios":usuarios,
+        "form":form,
+        "accion":accion
+    }
+    return render(request,"comunidad/usuarios/usuarios.html", context)
+def usuario_editar(request,pk):
+    usuario= Usuario.objects.get(id=pk)
+    usuarios= Usuario.objects.all()
+    accion="Editar"
+    nombre=f"{usuario.primer_nombre} {usuario.primer_apellido}"
+    titulo=f"Usuario {nombre}"
+
+    if request.method=="POST":
+        form= UsuarioEditarForm(request.POST,request.FILES, instance=usuario)
+        if form.is_valid():
+            usuario= form.save()
+            # Actualizar el grupo del usuario
+            rol_id = request.POST.get('rol')
+            if rol_id:
+                rol = Group.objects.get(id=rol_id)
+                usuario.user.groups.set([rol])
+            if usuario.imagen:
+                img = Image.open(usuario.imagen.path)
+                img= img.resize((500,500))
+                img.save(usuario.imagen.path)
+            usuario.save()
+            messages.success(request, f'¡{nombre} se editó de forma exitosa!')
             return redirect("usuarios")
         else:
-            messages.error(request, "Error al actualizar el usuario.")
-    else:
-        form = UsuarioEditarForm(instance=usuario)
+            messages.error(request, f'¡Error al editar a {nombre}!')
 
-    context = {
-        "titulo": titulo,
-        "accion": accion,
-        "form": form,
-        "usuarios": usuarios,
+    else:
+        form=UsuarioEditarForm(instance=usuario)
+    context={
+        "titulo":titulo,
+        "usuarios":usuarios,
+        "form":form,
+        "accion":accion
     }
-    return render(request, "comunidad/usuarios/usuarios.html", context)
+    return render(request,"comunidad/usuarios/usuarios.html", context)
+def usuario_eliminar(request,pk):
+    usuario=Usuario.objects.filter(id=pk)
+    usuario.update(estado=False)
+    
+    ## Agregar mensjae de exito
+    return redirect('usuarios')
 
 def edit_group(request, group_id=None):
     groups = Group.objects.all()
@@ -125,13 +121,13 @@ def edit_group(request, group_id=None):
         form = GroupForm(request.POST, instance=group)
         if form.is_valid():
             form.save()
-            return redirect('edit_group', group_id)  # Cambia 'list_groups' por el nombre de la URL donde se listan los grupos
+            return redirect('edit_group',group_id)  # Cambia 'list_groups' por el nombre de la URL donde se listan los grupos
     else:
         form = GroupForm(instance=group)
-    context = {
-        'groups': groups,
-        'group': group,
-        'form': form
+    context={
+    'groups':groups,
+    'group': group,
+    'form': form
     }
     return render(request, 'comunidad/usuarios/grupos.html', context)
 
@@ -139,21 +135,19 @@ def edit_group(request, group_id=None):
 def registrar_horas(request):
     # Obtén el objeto Usuario asociado al usuario logueado
     try:
-        usuario = Usuario.objects.get(user=request.user)  # Asegúrate de que el usuario tenga un objeto Usuario asociado
+        usuario = Usuario.objects.get(user=request.user)  # Esto es correcto
     except Usuario.DoesNotExist:
         messages.error(request, "No se encontró el usuario asociado.")
-        return redirect('lista_registros')  # Redirige a una página adecuada si no se encuentra el usuario
-
+        return redirect('lista_registros')
     if request.method == 'POST':
         form = RegistroHorasForm(request.POST, usuario=request.user)
         if form.is_valid():
             registro = form.save(commit=False)  # No guardes aún, primero asigna el usuario
-            registro.usuario = usuario  # Asigna el objeto Usuario al registro
+            registro.usuario = request.user  # Asigna el objeto User al registro
             registro.save()  # Ahora guarda el registro
             return redirect('lista_registros')
     else:
         form = RegistroHorasForm(usuario=request.user)
-
     return render(request, 'comunidad/horas/registrar.html', {
         'form': form,
         'numero_documento': usuario.documento  # Pasa el número de documento al template

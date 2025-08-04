@@ -49,31 +49,21 @@
                                 {% bs_icon 'people-fill' %}
                                 <p>Usuarios</p>
                             </a>
-                        </li>
+                        </li>  
+                        
                         <li class="nav-item">
                             <a href="{% url 'registrar' %}" class="nav-link" data-url="">
                                 {% bs_icon 'clock-fill' %}
                                 <p>Horas</p>
                             </a>
                         </li>
-                        {% comment %} <li class="nav-item">
-                            <a href="" class="nav-link" data-url="">
-                                {% bs_icon 'clock' %}
-                                <p>Horas extras</p>
-                            </a>
-                        </li> {% endcomment %}
-                        {% comment %} <li class="nav-item">
-                            <a href="" class="nav-link" data-url="">
+                        
+                        <li class="nav-item">
+                            <a href="{% url 'solicitud_permiso_create' %}" class="nav-link" data-url="">
                                 {% bs_icon 'door-open' %}
                                 <p>Permisos</p>
-                            </a> {% endcomment %}
-                       {% comment %}  </li>
-                        <li class="nav-item">
-                            <a href="" class="nav-link" data-url="">
-                                {% bs_icon 'file-earmark-text' %}
-                                <p>Informes</p>
-                            </a> {% endcomment %}
-                        </li>
+                            </a> 
+
                     </ul>
                 </li>
 
@@ -93,23 +83,27 @@
                     </ul>
                 </li>
 
-                <li class="nav-item menu-close">
-                    <a href="#" class="nav-link ">
-                        {% bs_icon 'gear-wide-connected' %}
-                        <p>Configuraciones</p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="" class="nav-link" data-url="">
-                                {% bs_icon 'card-image' %}
-                                <p>Sliders</p>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-        </nav>
-        <!-- /.sidebar-menu -->
+        <li class="nav-item menu-close">
+          <a href="#" class="nav-link ">
+            {% bs_icon 'gear-wide-connected' %}
+            <p>
+              Configuraciones
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="{% url 'sliders' %}" class="nav-link" data-url="">
+                {% bs_icon 'card-image' %}
+                <p>Sliders</p>
+              </a>
+            </li>
+            
+          </ul>
+        </li>
+      </ul>
+      </nav>
+      <!-- /.sidebar-menu -->
     </div>
     <!-- /.sidebar -->
-</aside>
+  </aside>
+     <!-- script para ventana activa -->

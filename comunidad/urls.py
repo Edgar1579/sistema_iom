@@ -12,7 +12,7 @@ from comunidad.views import (
        crear_solicitud_permiso,
        edit_group,
        panel_inicio
-        # Asegúrate de que esta línea esté aquí
+        
    )
 
 urlpatterns = [

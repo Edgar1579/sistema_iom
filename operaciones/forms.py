@@ -1,8 +1,15 @@
 # operaciones/forms.py
 from django import forms
-from .models import Anuncio
+from operaciones.models import Anuncio
 
 class AnuncioForm(forms.ModelForm):
     class Meta:
         model = Anuncio
-        fields = ['titulo', 'imagen', 'contenido', 'accion']  # Asegúrate de incluir 'accion'
+        fields= "__all__"
+        exclude=["estado",]
+
+class AnuncioEditarForm(forms.ModelForm):
+    class Meta:
+        model= Anuncio
+        fields= "__all__"
+        exclude=["estado",]

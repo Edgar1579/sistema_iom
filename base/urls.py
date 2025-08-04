@@ -15,7 +15,8 @@ urlpatterns = [
     path('base/', principal, name='base'),# Ruta para la página principal
     path('adm/', principal_admin, name='index-admin'),
     path('comunidad/', include('comunidad.urls')),  # Incluye las URLs de la aplicación comunidad
-    path('operaciones/', include('operaciones.urls'))
+    path('operaciones/', include('operaciones.urls')),
+    path('configuracion/', include('configuracion.urls'))
     
    
 ]
