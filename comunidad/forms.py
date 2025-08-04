@@ -42,10 +42,6 @@ class GroupForm(ModelForm):
         model = Group
         fields = ['name','permissions'] 
 
-
-
-
-
 class RegistroHorasForm(forms.ModelForm):
     numero_documento = forms.CharField(label="Número de Documento", required=False, disabled=True)
 

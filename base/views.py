@@ -23,55 +23,17 @@ def principal(request):
 @login_required
 def principal_admin(request):
     titulo = "Bienvenido"
+    
+    # Obtener las cantidades correctas
     usuarios = Usuario.objects.all().count()
+    usuarios_obj = Usuario.objects.all()
     context = {
         "titulo": titulo,
         "usuarios_cantidad": usuarios,
+        "usuarios_obj": usuarios_obj,
+        
     }
-    # Obtener todos los anuncios
-    anuncios = Anuncio.objects.all().count()
-    
-    # Procesar formulario si es POST
-    if request.method == 'POST':
-        try:
-            # Crear usuario Django
-            user = User.objects.create_user(
-                username=request.POST['documento'],
-                email=request.POST['correo'],
-                password=request.POST['password']
-            )
-            
-            # Crear usuario personalizado
-            usuario = Usuario.objects.create(
-                primer_nombre=request.POST['primer_nombre'],
-                segundo_nombre=request.POST.get('segundo_nombre', ''),
-                primer_apellido=request.POST['primer_apellido'],
-                segundo_apellido=request.POST['segundo_apellido'],
-                fecha_nacimiento=request.POST['fecha_nacimiento'],
-                correo=request.POST['correo'],
-                documento=request.POST['documento'],
-                tipo_documento=request.POST['tipo_documento'],
-                rol=request.POST['rol'],
-                departamento=request.POST.get('departamento', ''),
-                cargo=request.POST.get('cargo', ''),
-                telefono=request.POST.get('telefono', ''),
-                user=user,
-                creado_por=request.user if request.user.is_authenticated else None
-            )
-            
-            messages.success(request, 'Usuario creado exitosamente.')
-            return redirect('index-admin')
-            
-        except User.DoesNotExist:
-            messages.error(request, 'Error: El usuario no pudo ser creado.')
-        except Exception as e:
-            messages.error(request, f'Error al crear usuario: {str(e)}')
-    
-    context = {
-        "titulo": titulo,
-        "usuarios": usuarios,
 
-    }
     return render(request, "index-admin.html", context)
 
 def logout_user(request):
