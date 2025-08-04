@@ -4,21 +4,37 @@
 {% load static %}
 
 {% block contenido %}
-
-<div class="container-fluid m-4 row">
-  <div class="rounded card p-3 col-md-3">
-    <form method="POST" enctype="multipart/form-data">
-      {% csrf_token %}
-      <h5 class="mb-3">{{ accion }} {{ titulo }}</h5>
-      {{ form|crispy }}
-      <input class="btn btn-success" type="submit" value="{{ accion }} {{ titulo }}" />
+  <div class="container-fluid m-4 row">
+    {% if perms.comunidad.add_usuario %}
+      <div class="rounded card p-3 col-md-3">
+        <form method="POST" enctype="multipart/form-data">
+          {% csrf_token %}
+          {{ form|crispy }}
+          <input class="btn btn-success" type="submit" value="{{ accion }} {{ titulo }}" />
           <a href="{% url 'usuarios' %}" class="btn btn-danger">Cancelar</a>
-    </form>
-  </div>
-
-  <div class="rounded card p-3 mx-4 col-md-8">
-    <h5>Lista de Usuarios</h5>
-     <table class="table table-bordered w-100 display nowrap" id="tabla-usuarios">
+        </form>
+      </div>
+    {% endif %}
+    <div class="rounded card p-3  mb-3 mx-4 col-md-8">
+      <a href="{% url 'create_group' %}" class="btn btn-warning w-25">Roles</a>
+      <!-- Agrega los campos de filtro de fecha en tu HTML -->
+      <!-- <table border="0" cellspacing="5" cellpadding="5">
+        <tbody>
+          <tr>
+            <td>Minimum date:</td>
+            <td>
+              <input type="text" id="min" name="min" class="dt-datetime" />
+            </td>
+          </tr>
+          <tr>
+            <td>Maximum date:</td>
+            <td>
+              <input type="text" id="max" name="max" />
+            </td>
+          </tr>
+        </tbody>
+      </table> -->
+      <table class="table table-bordered w-100 display nowrap" id="tabla-usuarios">
         <thead>
           <tr>
             <th>Imagen</th>
@@ -39,13 +55,9 @@
           {% for usuario in usuarios %}
             {% if usuario.estado %}
               <tr>
-                   <td>
-       {% if usuario.imagen %}
-           <img src="{{ usuario.imagen.url }}" class="img-circle elevation-2" alt="User  Image" width="60" />
-       {% else %}
-           <img src="{% static 'media\comunidad\default-user.jpeg' %}" class="img-circle elevation-2" alt="Default User Image" width="60" />
-       {% endif %}
-   </td>
+                <td>
+                  <img src="{{ usuario.imagen.url }}" class="img-circle elevation-2" alt="User Image" width="60" />
+                </td>
                 <td>{{ usuario.primer_nombre }}</td>
                 <td>{{ usuario.segundo_nombre }}</td>
                 <td>{{ usuario.primer_apellido }}</td>
