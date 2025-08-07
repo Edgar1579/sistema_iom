@@ -23,6 +23,7 @@ urlpatterns = [
     path('horas/', lista_registros, name='lista_registros'),
     path('horas/<int:pk>/', detalle_registro, name='detalle_registro'),
     path('ajax/verificar-tipo-dia/', verificar_tipo_dia, name='verificar_tipo_dia'),
+
     path('panel/', panel_inicio, name='panel_inicio'),
     path("solicitud_permiso/", lista_solicitud_permiso, name='solicitud_permiso_list'),
     path("solicitud_permiso/nuevo/", crear_solicitud_permiso, name='solicitud_permiso_create'),
