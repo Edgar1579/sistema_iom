@@ -1,9 +1,6 @@
 {% extends 'partials/admin/body_login.html' %}
 {% load static %}
 {% load bootstrap_icons %}
-{% load crispy_forms_tags %}
-
-
 
 {% block contenido %}
 
@@ -14,13 +11,13 @@
                 <img src="{% static 'images/logoiom.png' %}" width="200" style="opacity: .8">
             </a>
         </div>
-        <div class="card card-outline card-primary" style="background-color: #d9d9e5ff;">
+        <div class="card card-outline card-primary" style="background-color: hsl(217, 28%, 67%);">
             <div class="card-body p-4">
                 <p class="login-box-msg h2 text-center">Bienvenido</p>
                 <form method="post">
                     {% csrf_token %}
                     <div class="input-group mb-3">
-                        {{ form.username|as_crispy_field }}
+                        {{ form.username }}
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 {% bs_icon 'person-fill' %}
@@ -28,24 +25,25 @@
                         </div>
                     </div>
                     <div class="input-group mb-3">
-                        {{ form.password|as_crispy_field }}
+                        {{ form.password }}
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 {% bs_icon 'lock-fill' %}
                             </div>
                         </div>
                     </div>
-                    <div class="d-flex  mb-2"> <!-- Cambiado a justify-content-center para centrar -->
-                <div class="icheck-primary">
-                    <input type="checkbox" name="remember" id="remember" />
-                    <label for="remember">Recordarme</label>
-                </div>
+    <div class="d-flex justify-content-start ">  <!-- Alinea a la izquierda -->
+      <div class="icheck-primary">
+        <input type="checkbox" name="remember" id="remember">
+        <label for="remember">Recordarme</label>
+      </div>
+    </div>
             </div>
             <div class="col-12 text-center"> <!-- Added text-center to center the button -->
                 <button type="submit" class="btn btn-primary px-12">Iniciar Sesión</button>
             </div>
                     
-            <p class="mt-3 text-center mb-1">
+            <p class="mt-3 text-center mb-3">
                         <a href="">Olvidé mi contraseña</a>
                     </p>
                     

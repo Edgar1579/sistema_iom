@@ -51,8 +51,8 @@ def slider_editar(request, pk):
         # Si es una solicitud GET, muestra el formulario con los datos existentes
         form = SliderForm(instance=slider)
 
-    # Obtén la URL de la vista "sliders"
-    url_add = reverse("editar_slider")
+    # Obtén la URL de la vista "editar_slider" pasando el pk
+    url_add = reverse("editar_slider", kwargs={'pk': pk})
 
     # Pasa el formulario y otros datos a la plantilla
     context = {
@@ -62,6 +62,7 @@ def slider_editar(request, pk):
     }
 
     return render(request, "configuracion/slider_editar.html", context)
+
 
 def slider_eliminar(request, pk):
 # Obtén el objeto Slider que se va a "eliminar"

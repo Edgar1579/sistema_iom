@@ -6,6 +6,7 @@ from datetime import datetime
 from django.utils import timezone
 from decimal import Decimal
 import holidays
+from django.templatetags.static import static
 
 def get_image_filename(instance, filename):
     ext = filename.split('.')[-1]

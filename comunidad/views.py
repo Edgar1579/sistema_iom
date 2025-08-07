@@ -112,22 +112,22 @@ def usuario_eliminar(request,pk):
 
 def edit_group(request, group_id=None):
     groups = Group.objects.all()
+    
     if group_id:
         group = get_object_or_404(Group, id=group_id)
     else:
         group = None
-
     if request.method == 'POST':
         form = GroupForm(request.POST, instance=group)
         if form.is_valid():
             form.save()
-            return redirect('edit_group',group_id)  # Cambia 'list_groups' por el nombre de la URL donde se listan los grupos
+            return redirect('group_edit', group_id=group.id) if group else redirect('group_create')
     else:
         form = GroupForm(instance=group)
-    context={
-    'groups':groups,
-    'group': group,
-    'form': form
+    context = {
+        'groups': groups,
+        'group': group,
+        'form': form
     }
     return render(request, 'comunidad/usuarios/grupos.html', context)
 
