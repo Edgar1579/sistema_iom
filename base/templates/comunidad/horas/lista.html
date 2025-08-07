@@ -6,7 +6,7 @@
         <tr>
             <th>Fecha</th>
             <th>Entrada</th>
-            <th>Salida</th>
+            <th>Salida</th>            
             <th>Pago Total</th>
             <th>Detalles</th>
         </tr>
@@ -16,8 +16,9 @@
         <tr>
             <td>{{ registro.fecha }}</td>
             <td>{{ registro.hora_entrada }}</td>
-            <td>{{ registro.hora_salida }}</td>
+            <td>{{ registro.hora_salida }}</td>            
             <td>${{ registro.pago_total }}</td>
+            
             <td><a href="{% url 'detalle_registro' registro.pk %}" data-bs-toggle="tooltip" title="Ver detalles del registro">Ver</a></td>
         </tr>
         {% endfor %}
