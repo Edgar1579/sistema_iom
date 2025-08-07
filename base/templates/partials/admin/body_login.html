@@ -6,27 +6,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<!--     <link rel="stylesheet" href="{% static 'css/style.css' %}">
- -->    {% bootstrap_css %}
+   
+    {% bootstrap_css %}
     {% bootstrap_javascript %}
-    <title>In Out Manager - Iniciar Sesión</title>
     <link rel="shortcut icon" href="{% static 'images/logoiom.png' %}" type="image/x-icon">
-
-    
-    
-    </div>
-</div>  
-        
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <title>In Out Manager - Iniciar Sesión</title>       
 </head>
-
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+ <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="container-fluid">
-    <!-- Logo/Marca aquí -->
+
        <link rel="shortcut icon" href="{% static 'images/logoiom.png' %}"
     type="image/x-icon">
     
     <div class="collapse navbar-collapse">
-      <ul class="navbar-nav ms-auto"> <!-- Alineación derecha -->
+      <ul class="navbar-nav ms-auto"> 
         <li class="nav-item">
           <a href="{% url 'index' %}" class="btn btn-primary">Inicio</a>
         </li>
@@ -35,17 +29,16 @@
   </div>
 </nav>
 
-<body class="hold-transition dark-mode login-page">
+<body class="hold-transition dark-mode login-page"> 
     
     {% block contenido %}   
          
-    {% endblock contenido %}
+      {% endblock %}
+    </div>
+    <!-- jQuery -->
+    <script src="{% static 'js/jquery/jquery.min.js' %}"></script>
 
-
-
-
-</body>
+    <!-- AdminLTE App -->
+    <script src="{% static 'js/adminlte/adminlte.js' %}"></script>
+  </body>
 </html>
-
-
-    {% include 'partials/admin/footer.html' %}

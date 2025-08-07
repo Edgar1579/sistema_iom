@@ -26,8 +26,8 @@ urlpatterns = [
     path('panel/', panel_inicio, name='panel_inicio'),
     path("solicitud_permiso/", lista_solicitud_permiso, name='solicitud_permiso_list'),
     path("solicitud_permiso/nuevo/", crear_solicitud_permiso, name='solicitud_permiso_create'),
-    path('usuarios/roles/', edit_group, name='create_group'),
-    path('usuarios/roles/<int:group_id>/', edit_group, name='edit_group'),
+    path('usuarios/roles/', edit_group, name='group_create'),  # Para crear un nuevo grupo
+    path('usuarios/roles/<int:group_id>/', edit_group, name='group_edit'),  # Para editar un grupo existente
    
     
 ]

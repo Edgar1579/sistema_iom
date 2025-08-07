@@ -4,6 +4,7 @@
 
 {% block contenido %}
 
+<h2>Lista de Grupos</h2>
 <table>
     <thead>
       <tr>
@@ -17,16 +18,18 @@
         <tr>
           <td>{{ g.id }}</td>
           <td>{{ g.name }}</td>
-          <td><a href="{% url 'edit_group' group_id=g.id %}">Editar</a></td>
+          <td><a href="{% url 'group_edit' group_id=g.id %}">Editar</a></td>
         </tr>
       {% endfor %}
     </tbody>
-  </table>
-<!-- edit_group.html -->
-<h2>{% if group %}Edit Group: {{ group.name }}{% else %}Create Group{% endif %}</h2>
-<form method="post" action="{% if group %}{% url 'edit_group' group_id=group.id %}{% else %}{% url 'create_group' %}{% endif %}">
+</table>
+
+<!-- Formulario para crear o editar un grupo -->
+<h2>{% if group %}Editar Grupo: {{ group.name }}{% else %}Crear Grupo{% endif %}</h2>
+<form method="post" action="{% if group %}{% url 'group_edit' group_id=group.id %}{% else %}{% url 'group_create' %}{% endif %}">
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit">Guardar cambios</button>
 </form>
+
 {% endblock %}
