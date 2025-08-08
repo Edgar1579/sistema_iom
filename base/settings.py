@@ -27,6 +27,9 @@ INSTALLED_APPS = [
     'django_bootstrap_icons',# pip install django-bootstrap-icons
     'crispy_bootstrap5', #pip install crispy-bootstrap5
     'widget_tweaks',  #pip install django-widget-tweaks
+    'holidays',  #pip install holidays
+    'PIL', #pip install Pillow
+
 ]
 
 
@@ -108,6 +111,18 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Default primary key field type
+# https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
+
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.googlemail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'inoutmanager2025@gmail.com'
+EMAIL_HOST_PASSWORD = 'mmqo tadg qhqw jjhq'
+EMAIL_USE_TLS = True
 
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'index-admin'

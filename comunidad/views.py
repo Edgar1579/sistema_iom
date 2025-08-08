@@ -10,9 +10,9 @@ from PIL import Image
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required, permission_required
 from datetime import datetime
-
 # Create your views here.
-
+from django.views.decorators.csrf import csrf_exempt
+@csrf_exempt
 #@permission_required('comunidad.add_usuario', raise_exception=True)
 def usuario_crear(request):
     titulo="Usuario"
