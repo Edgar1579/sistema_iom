@@ -69,10 +69,37 @@
     </div>
 </div>
 
-  
+  <h1>Anuncios</h1>
+    <!-- START THE FEATURETTES -->
+    {% for anuncio in anuncios %}
+    <hr class="featurette-divider" />
+    <div class="row featurette">
+        <div class="col-md-7">
+            <h2 class="featurette-heading fw-normal lh-1">
+                {{ anuncio.titulo }}
+                <span class="text-body-secondary">¡Mira esto!</span>
+            </h2>
+            <p class="lead">
+                {{ anuncio.contenido }}
+            </p>
+        </div>
+        <div class="col-md-5">
+            {% if anuncio.imagen %}
+                <img src="{{ anuncio.imagen.url }}" alt="{{ anuncio.titulo }}" class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" height="500" width="500">
+            {% else %}
+                <svg aria-label="Placeholder: 500x500" class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" height="500" preserveAspectRatio="xMidYMid slice" role="img" width="500" xmlns="http://www.w3.org/2000/svg">
+                    <title>Placeholder</title>
+                    <rect width="100%" height="100%" fill="var(--bs-secondary-bg)"></rect>
+                    <text x="50%" y="50%" fill="var(--bs-secondary-color)" dy=".3em">500x500</text>
+                </svg>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+    <hr class="featurette-divider" />
     
     <!-- START THE FEATURETTES -->
-    <hr class="featurette-divider" />
+    <!-- <hr class="featurette-divider" />
     <div class="row featurette">
       <div class="col-md-7">
         <h2 class="featurette-heading fw-normal lh-1">
@@ -167,7 +194,7 @@
         </svg>
       </div>
     </div>
-    <hr class="featurette-divider" />
+    <hr class="featurette-divider" /> -->
     <!-- /END THE FEATURETTES -->
   </div>
 </main>

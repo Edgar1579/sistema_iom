@@ -1,19 +1,22 @@
+<!-- operaciones/anuncios/anuncio_form.html -->
 {% extends 'partials/admin/body.html' %}
 {% load static %}
 {% load bootstrap_icons %}
 {% load crispy_forms_tags %}
-{% load bootstrap_icons %}
 
 {% block contenido %}
-{{ form.as_p }}
-            <button type="submit" class="btn btn-primary">Guardar</button>
-            {{ form|crispy }}
-            <div class="form-group mt-3">
-                <button type="submit" class="btn btn-primary">
-                    {% bs_icon 'save' %} Guardar
-                </button>
-                <a href="{% url 'anuncio_lista' %}" class="btn btn-secondary ml-2">
-                    {% bs_icon 'arrow-left' %} Cancelar
-                </a>
-            </div>
+<form method="post" enctype="multipart/form-data">  <!-- Aquí comienza el formulario -->
+    {% csrf_token %}  <!-- Esto es importante para la protección contra CSRF -->
+    
+    {{ form|crispy }}  <!-- Renderiza el formulario usando crispy -->
+    
+    <div class="form-group mt-3">
+        <button type="submit" class="btn btn-primary">
+            {% bs_icon 'save' %} Guardar
+        </button>
+        <a href="{% url 'anuncio_lista' %}" class="btn btn-secondary ml-2">
+            {% bs_icon 'arrow-left' %} Cancelar
+        </a>
+    </div>
+</form>  <!-- Cierra el formulario aquí -->
 {% endblock %}
