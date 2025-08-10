@@ -67,25 +67,27 @@ class RegistroHorasForm(forms.ModelForm):
             except Usuario.DoesNotExist:
                 self.fields['numero_documento'].initial = ""  # Manejo de error si no se encuentra el usuario
 
-    def clean(self):
-     cleaned_data = super().clean()
-     fecha = cleaned_data.get('fecha')
+def clean(self):
+    cleaned_data = super().clean()
+    fecha = cleaned_data.get('fecha')
 
-     if fecha:
+    if fecha:
         es_domingo = fecha.weekday() == 6
         es_festivo = fecha in holidays.Colombia(years=fecha.year)
 
-        if es_domingo or es_festivo:
-            msg = []
-            if es_domingo:
-                msg.append("DOMINGO")
-            if es_festivo:
-                msg.append("FESTIVO")
+        # En lugar de marcar error, solo informa al usuario
+        msg = []
+        if es_domingo:
+            msg.append("DOMINGO")
+        if es_festivo:
+            msg.append("FESTIVO")
 
-            # En lugar de marcar error:
-            self.add_error('fecha', f"La fecha seleccionada es un {' y '.join(msg)}.")
+        if msg:
+            # Puedes usar un mensaje de advertencia o información
+            self.add_error('fecha', f"La fecha seleccionada es un {' y '.join(msg)}. Puedes proceder a registrar.");
 
-        return cleaned_data
+    return cleaned_data
+
 
 
 

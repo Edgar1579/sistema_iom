@@ -1,4 +1,7 @@
 {% extends 'partials/admin/body.html' %}
+{% load crispy_forms_tags %}
+{% load bootstrap_icons %}
+{% load static %}
 
 {% block contenido %}
 <div class="container-fluid m-4 row">
@@ -25,10 +28,17 @@
               <img src="{{ slider.imagen.url }}" alt="{{ slider.nombre }}" style="max-width: 100px; max-height: 100px;" />
             </td>
             <td>{{ slider.prioridad }}</td>
-            <td>
-              <a href="{% url 'editar_slider' slider.id %}" class="btn btn-sm btn-primary">Editar</a>
-              <a href="{% url 'eliminar_slider' slider.id %}" class="btn btn-sm btn-danger">Eliminar</a>
-            </td>
+           <td>
+  <a href="{% url 'editar_slider' slider.id %}" class="btn btn-sm btn-primary me-2" data-bs-toggle="tooltip" title="Editar">
+    {% bs_icon 'pencil' %}
+    <span class="visually-hidden">Editar</span>
+  </a>
+  <a href="{% url 'eliminar_slider' slider.id %}" class="btn btn-sm btn-danger" data-bs-toggle="tooltip" title="Eliminar">
+    {% bs_icon 'trash' %}
+    <span class="visually-hidden">Eliminar</span>
+  </a>
+</td>
+
           </tr>
         {% endfor %}
       </tbody>

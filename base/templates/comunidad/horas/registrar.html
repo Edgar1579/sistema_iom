@@ -47,16 +47,27 @@
     const fecha = this.value;
     if (!fecha) return;
 
+    // Aquí puedes hacer la verificación si deseas mostrar información
     fetch(`/ajax/verificar-tipo-dia/?fecha=${fecha}`)
       .then(response => response.json())
       .then(data => {
-        if (data.error) {
-          alert(data.error);
-        } else if (data.tipo) {
-          alert(`La fecha seleccionada es un ${data.tipo.toUpperCase()}.`);
+        // Solo muestra información, no errores
+        if (data.tipo) {
+          Swal.fire({
+            icon: 'info',
+            title: 'Tipo de Día',
+            text: `La fecha seleccionada es un ${data.tipo.toUpperCase()}. Puedes proceder a registrar.`,
+          });
+        } else {
+          Swal.fire({
+            icon: 'info',
+            title: 'Información',
+            text: 'La fecha seleccionada es válida para registrar.',
+          });
         }
       })
-      .catch(error => console.error('Error al verificar tipo de día:', error));
+
   });
 </script>
+
 {% endblock %}
