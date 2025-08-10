@@ -16,8 +16,12 @@ urlpatterns = [
     path('adm/', principal_admin, name='index-admin'),
     path('comunidad/', include('comunidad.urls')),  # Incluye las URLs de la aplicación comunidad
     path('operaciones/', include('operaciones.urls')),
-    path('configuracion/', include('configuracion.urls'))
-    
+    path('configuracion/', include('configuracion.urls')),   
+    path('reiniciar/',auth_views.PasswordResetView.as_view(),name='pass_reset'),
+    path('reiniciar/enviar',auth_views.PasswordResetDoneView.as_view(),name='pass_reset_done'),
+    path('reiniciar/<uid64>/<token>',auth_views.PasswordResetConfirmView.as_view(),name='pass_reset_confirm'),
+    path('reiniciar/completo',auth_views.PasswordResetCompleteView.as_view(),name='pass_reset_reset_complete'),
+    path('', include('django.contrib.auth.urls')),
    
 ]
 

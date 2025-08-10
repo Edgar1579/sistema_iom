@@ -2,10 +2,11 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
-from datetime import datetime
 from django.utils import timezone
 from decimal import Decimal
 import holidays
+from django.templatetags.static import static
+from datetime import datetime, time, timedelta
 
 def get_image_filename(instance, filename):
     ext = filename.split('.')[-1]
@@ -60,10 +61,9 @@ class ConfiguracionGeneral(models.Model):
         return f"Configuración {self.año}"
 
 class RegistroHoras(models.Model):
-    # Constantes para el cálculo
-    SALARIO_MINIMO = Decimal('1423500')  # Salario mínimo
-    AUXILIO_TRANSPORTE = Decimal('200000')  # Auxilio de transporte
-    HORAS_TRABAJADAS_MES = 220  # Horas trabajadas al mes
+    SALARIO_MINIMO = Decimal('1423500')
+    AUXILIO_TRANSPORTE = Decimal('200000')
+    HORAS_TRABAJADAS_MES = Decimal('220')
 
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
     fecha = models.DateField(default=timezone.now)
@@ -78,9 +78,9 @@ class RegistroHoras(models.Model):
     recargo_nocturno = models.DecimalField(max_digits=5, decimal_places=2, default=0)
     recargo_dominical = models.DecimalField(max_digits=5, decimal_places=2, default=0)
     recargo_festivo = models.DecimalField(max_digits=5, decimal_places=2, default=0)
+
     pago_total = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
-    
     def __str__(self):
         return f"{self.usuario.username} - {self.fecha}"
 
@@ -88,70 +88,78 @@ class RegistroHoras(models.Model):
         return self.fecha.weekday() == 6
 
     def es_festivo(self):
-        colombia_holidays = holidays.Colombia(years=self.fecha.year)
-        return self.fecha in colombia_holidays
+        festivos = holidays.Colombia(years=self.fecha.year)
+        return self.fecha in festivos
 
     def calcular_horas(self):
         entrada = datetime.combine(self.fecha, self.hora_entrada)
         salida = datetime.combine(self.fecha, self.hora_salida)
 
         if salida <= entrada:
-            raise ValidationError("La hora de salida debe ser posterior a la hora de entrada.")
+            salida += timedelta(days=1)  # Caso de turno nocturno que pasa de medianoche
 
-        if self.es_domingo() or self.es_festivo():
-            self.calcular_horas_dominical_festivo(entrada, salida)
-        else:
-            self.calcular_horas_normales(entrada, salida)
+        # Inicializa todas las horas en cero
+        self.horas_normales_diurnas = Decimal('0')
+        self.horas_normales_nocturnas = Decimal('0')
+        self.horas_extras_diurnas = Decimal('0')
+        self.horas_extras_nocturnas = Decimal('0')
+        self.recargo_nocturno = Decimal('0')
+        self.recargo_dominical = Decimal('0')
+        self.recargo_festivo = Decimal('0')
 
-def calcular_horas_normales(self, entrada, salida):
-    # Definir las horas de inicio y fin para las horas normales
-    inicio_horas_normales = time(6, 0)  # 6 AM
-    fin_horas_normales = time(19, 0)    # 7 PM
-    # Comprobar si la hora de entrada es antes de las horas normales
-    if entrada.time() < inicio_horas_normales:
-        entrada = entrada.replace(hour=6, minute=0)  # Ajustar la entrada a las 6 AM
-    # Comprobar si la hora de salida es después de las horas normales
-    if salida.time() > fin_horas_normales:
-        salida = salida.replace(hour=19, minute=0)  # Ajustar la salida a las 7 PM
-    # Calcular las horas normales diurnas
-    if salida.time() <= fin_horas_normales:  # Cambiar <= a <= para evitar el error
-        self.horas_normales_diurnas = Decimal((salida - entrada).total_seconds() / 3600)
-    else:
-        self.horas_normales_diurnas = Decimal((fin_horas_normales - entrada.time()).total_seconds() / 3600)
-        self.horas_normales_nocturnas = Decimal((salida - fin_horas_normales).total_seconds() / 3600)
+        total_horas = Decimal((salida - entrada).total_seconds() / 3600)
 
-def calcular_horas_dominical_festivo(self, entrada, salida):
-    fin_diurno = entrada.replace(hour=19, minute=0)
-    if salida <= fin_diurno:
-        self.recargo_dominical = Decimal((salida - entrada).total_seconds() / 3600)
-    else:
-        self.recargo_dominical = Decimal((fin_diurno - entrada).total_seconds() / 3600)
-        self.recargo_nocturno = Decimal((salida - fin_diurno).total_seconds() / 3600)
+        # Lógica básica de división horaria
+        hora_actual = entrada
+        while hora_actual < salida:
+            siguiente = hora_actual + timedelta(hours=1)
+            if siguiente > salida:
+                siguiente = salida
+            hora = hora_actual.time()
 
-def calcular_pago_total(self):
-    # Calcular el valor de la hora ordinaria
-    valor_hora = (self.SALARIO_MINIMO + self.AUXILIO_TRANSPORTE) / self.HORAS_TRABAJADAS_MES
+            # Clasificación de la hora
+            es_nocturna = hora < time(6, 0) or hora >= time(21, 0)
+            es_extra = (salida - entrada).total_seconds() / 3600 > 8
+            es_domingo = self.es_domingo()
+            es_festivo = self.es_festivo()
 
-    # Calcular el pago total
-    pago_total = (
-        self.horas_normales_diurnas * valor_hora +
-        self.horas_normales_nocturnas * valor_hora * Decimal('1.35') +
-        self.horas_extras_diurnas * valor_hora * Decimal('1.25') +
-        self.horas_extras_nocturnas * valor_hora * Decimal('1.75') +
-        self.recargo_nocturno * valor_hora * Decimal('0.35') +
-        self.recargo_dominical * valor_hora * Decimal('0.75') +
-        self.recargo_festivo * valor_hora * Decimal('0.75')
-    )
-    return pago_total.quantize(Decimal('1.00'))
+            if es_domingo:
+                self.recargo_dominical += Decimal((siguiente - hora_actual).total_seconds() / 3600)
+            elif es_festivo:
+                self.recargo_festivo += Decimal((siguiente - hora_actual).total_seconds() / 3600)
+            elif es_extra:
+                if es_nocturna:
+                    self.horas_extras_nocturnas += Decimal((siguiente - hora_actual).total_seconds() / 3600)
+                else:
+                    self.horas_extras_diurnas += Decimal((siguiente - hora_actual).total_seconds() / 3600)
+            else:
+                if es_nocturna:
+                    self.horas_normales_nocturnas += Decimal((siguiente - hora_actual).total_seconds() / 3600)
+                    self.recargo_nocturno += Decimal((siguiente - hora_actual).total_seconds() / 3600)
+                else:
+                    self.horas_normales_diurnas += Decimal((siguiente - hora_actual).total_seconds() / 3600)
 
-@property
-def pago_total(self):
-    return self.calcular_pago_total()
+            hora_actual = siguiente
 
-def save(self, *args, **kwargs):
-    self.calcular_horas()
-    self.pago_total = self.calcular_pago_total()
-    super().save(*args, **kwargs)
+    def calcular_pago_total(self):
+        valor_hora = (self.SALARIO_MINIMO + self.AUXILIO_TRANSPORTE) / self.HORAS_TRABAJADAS_MES
+
+        total = (
+            self.horas_normales_diurnas * valor_hora +
+            self.horas_normales_nocturnas * valor_hora * Decimal('1.35') +
+            self.horas_extras_diurnas * valor_hora * Decimal('1.25') +
+            self.horas_extras_nocturnas * valor_hora * Decimal('1.75') +
+            self.recargo_nocturno * valor_hora * Decimal('0.35') +
+            self.recargo_dominical * valor_hora * Decimal('1.75') +
+            self.recargo_festivo * valor_hora * Decimal('1.75')
+        )
+
+        return total.quantize(Decimal('1.00'))
+
+    def save(self, *args, **kwargs):
+        self.calcular_horas()
+        self.pago_total = self.calcular_pago_total()
+        super().save(*args, **kwargs)
 
 class SolicitudPermiso(models.Model):
     usuario = models.ForeignKey(User, on_delete=models.CASCADE, related_name='permisos')

@@ -68,20 +68,22 @@ class RegistroHorasForm(forms.ModelForm):
                 self.fields['numero_documento'].initial = ""  # Manejo de error si no se encuentra el usuario
 
     def clean(self):
-        cleaned_data = super().clean()
-        fecha = cleaned_data.get('fecha')
+     cleaned_data = super().clean()
+     fecha = cleaned_data.get('fecha')
 
-        if fecha:
+     if fecha:
+        es_domingo = fecha.weekday() == 6
+        es_festivo = fecha in holidays.Colombia(years=fecha.year)
+
+        if es_domingo or es_festivo:
             msg = []
-            if fecha.weekday() == 6:
-                msg.append("La fecha seleccionada es un DOMINGO.")
-            
-            colombia_holidays = holidays.Colombia(years=fecha.year)
-            if fecha in colombia_holidays:
-                msg.append("La fecha seleccionada es un FESTIVO en Colombia.")
+            if es_domingo:
+                msg.append("DOMINGO")
+            if es_festivo:
+                msg.append("FESTIVO")
 
-            if msg:
-                self.add_error('fecha', " ".join(msg))
+            # En lugar de marcar error:
+            self.add_error('fecha', f"La fecha seleccionada es un {' y '.join(msg)}.")
 
         return cleaned_data
 

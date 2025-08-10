@@ -1,4 +1,5 @@
 {% extends 'partials/admin/body.html' %}
+{% load humanize %}
 {% block contenido %}
 <h2>Mis Registros</h2>
 <table class="table table-bordered w-100 display nowrap" id="tabla-horas">
@@ -17,9 +18,10 @@
             <td>{{ registro.fecha }}</td>
             <td>{{ registro.hora_entrada }}</td>
             <td>{{ registro.hora_salida }}</td>            
-            <td>${{ registro.pago_total }}</td>
-            
-            <td><a href="{% url 'detalle_registro' registro.pk %}" data-bs-toggle="tooltip" title="Ver detalles del registro">Ver</a></td>
+            <td>${{ registro.pago_total|floatformat:2|intcomma }}</td>
+            <td>
+              <a href="{% url 'detalle_registro' registro.pk %}" data-bs-toggle="tooltip" title="Ver detalles del registro">Ver</a>
+            </td>
         </tr>
         {% endfor %}
     </tbody>

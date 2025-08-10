@@ -1,56 +1,62 @@
 {% extends 'partials/admin/body.html' %}
 
 {% block contenido %}
-<h2>Registrar Horas</h2>
+<div class="container mt-4">
+  <h2 class="mb-4">Registrar Horas</h2>
 
-<form method="post">
+  <form method="post" novalidate>
     {% csrf_token %}
     {{ form.non_field_errors }}
-    
-    <div class="form-group">
-        <label for="id_numero_documento">Número de Documento</label>
-        {{ form.numero_documento }}
+
+    <div class="mb-3">
+      <label for="id_numero_documento" class="form-label">Número de Documento</label>
+      <input type="text" class="form-control" id="id_numero_documento" value="{{ form.numero_documento.value }}" disabled>
     </div>
 
-    <div class="form-group">
-        <label for="id_fecha">Fecha</label>
-        {{ form.fecha }}
-        {{ form.fecha.errors }}
+    <div class="mb-3">
+      <label for="id_fecha" class="form-label">Fecha</label>
+      {{ form.fecha }}
+      {% if form.fecha.errors %}
+        <div class="text-danger">{{ form.fecha.errors }}</div>
+      {% endif %}
     </div>
 
-    <div class="form-group">
-        <label for="id_hora_entrada">Hora de Entrada</label>
-        {{ form.hora_entrada }}
-        {{ form.hora_entrada.errors }}
+    <div class="mb-3">
+      <label for="id_hora_entrada" class="form-label">Hora de Entrada</label>
+      {{ form.hora_entrada }}
+      {% if form.hora_entrada.errors %}
+        <div class="text-danger">{{ form.hora_entrada.errors }}</div>
+      {% endif %}
     </div>
 
-    <div class="form-group">
-        <label for="id_hora_salida">Hora de Salida</label>
-        {{ form.hora_salida }}
-        {{ form.hora_salida.errors }}
+    <div class="mb-3">
+      <label for="id_hora_salida" class="form-label">Hora de Salida</label>
+      {{ form.hora_salida }}
+      {% if form.hora_salida.errors %}
+        <div class="text-danger">{{ form.hora_salida.errors }}</div>
+      {% endif %}
     </div>
 
     <button type="submit" class="btn btn-primary">Registrar</button>
-</form>
-
-<a href="{% url 'lista_registros' %}">Volver a la lista de registros</a>
+    <a href="{% url 'lista_registros' %}" class="btn btn-secondary ms-2">Volver</a>
+  </form>
+</div>
 
 <script>
-    // Verificar si la fecha es festivo o domingo
-    document.getElementById('id_fecha').addEventListener('change', function() {
-        const fecha = this.value;
-        fetch(`/ajax/verificar-tipo-dia/?fecha=${fecha}`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.error) {
-                    alert(data.error);
-                } else {
-                    let mensaje = `La fecha seleccionada es un ${data.tipo}.`;
-                    alert(mensaje);
-                }
-            })
-            .catch(error => console.error('Error:', error));
-    });
-</script>
+  document.getElementById('id_fecha').addEventListener('change', function() {
+    const fecha = this.value;
+    if (!fecha) return;
 
+    fetch(`/ajax/verificar-tipo-dia/?fecha=${fecha}`)
+      .then(response => response.json())
+      .then(data => {
+        if (data.error) {
+          alert(data.error);
+        } else if (data.tipo) {
+          alert(`La fecha seleccionada es un ${data.tipo.toUpperCase()}.`);
+        }
+      })
+      .catch(error => console.error('Error al verificar tipo de día:', error));
+  });
+</script>
 {% endblock %}

@@ -10,9 +10,9 @@ from PIL import Image
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required, permission_required
 from datetime import datetime
-
 # Create your views here.
-
+from django.views.decorators.csrf import csrf_exempt
+@csrf_exempt
 #@permission_required('comunidad.add_usuario', raise_exception=True)
 def usuario_crear(request):
     titulo="Usuario"
@@ -172,20 +172,16 @@ def detalle_registro(request, pk):
 
 def verificar_tipo_dia(request):
     fecha_str = request.GET.get('fecha')
-    if fecha_str:
-        try:
-            fecha = datetime.strptime(fecha_str, '%Y-%m-%d').date()
-            festivos = holidays.Colombia()
-            es_festivo = fecha in festivos
-            es_domingo = fecha.weekday() == 6
-            return JsonResponse({
-                'es_festivo': es_festivo,
-                'es_domingo': es_domingo,
-                'tipo': 'Festivo' if es_festivo else 'Domingo' if es_domingo else 'Normal'
-            })
-        except ValueError:
-            pass
-    return JsonResponse({'error': 'Fecha inválida'}, status=400)
+    try:
+        fecha = datetime.strptime(fecha_str, '%Y-%m-%d').date()
+        if fecha.weekday() == 6:
+            return JsonResponse({'tipo': 'domingo'})
+        elif fecha in holidays.Colombia(years=fecha.year):
+            return JsonResponse({'tipo': 'festivo'})
+        else:
+            return JsonResponse({'tipo': 'día laboral'})
+    except ValueError:
+        return JsonResponse({'error': 'Fecha inválida'})
 
 @login_required
 def lista_solicitud_permiso(request):

@@ -1,21 +1,28 @@
-{% extends 'partials/admin/body.html' %} 
-{% block contenido %}
-<h2>Detalle del Registro</h2>
-<p><strong>Fecha:</strong> {{ registro.fecha }}</p>
-<p><strong>Hora entrada:</strong> {{ registro.hora_entrada }}</p>
-<p><strong>Hora salida:</strong> {{ registro.hora_salida }}</p>
+{% extends 'partials/admin/body.html' %}
+{% load humanize %}
 
-<h3>Horas calculadas</h3>
+{% block contenido %}
+<h2 class="mt-4">Detalle del Registro</h2>
+
+<p><strong>Fecha:</strong> {{ registro.fecha|date:"j \\d\\e F \\d\\e Y" }}</p>
+<p><strong>Hora de entrada:</strong> {{ registro.hora_entrada }}</p>
+<p><strong>Hora de salida:</strong> {{ registro.hora_salida }}</p>
+
+<h3 class="mt-3">Horas calculadas</h3>
 <ul>
-    <li>Normales diurnas: {{ registro.horas_normales_diurnas }}</li>
-    <li>Normales nocturnas: {{ registro.horas_normales_nocturnas }}</li>
-    <li>Extras diurnas: {{ registro.horas_extras_diurnas }}</li>
-    <li>Extras nocturnas: {{ registro.horas_extras_nocturnas }}</li>
-    <li>Recargo nocturno: {{ registro.recargo_nocturno }}</li>
-    <li>Recargo dominical: {{ registro.recargo_dominical }}</li>
-    <li>Recargo festivo: {{ registro.recargo_festivo }}</li>
+    <li><strong>Normales diurnas:</strong> {{ registro.horas_normales_diurnas|floatformat:2 }} h</li>
+    <li><strong>Normales nocturnas:</strong> {{ registro.horas_normales_nocturnas|floatformat:2 }} h</li>
+    <li><strong>Extras diurnas:</strong> {{ registro.horas_extras_diurnas|floatformat:2 }} h</li>
+    <li><strong>Extras nocturnas:</strong> {{ registro.horas_extras_nocturnas|floatformat:2 }} h</li>
+    <li><strong>Recargo nocturno:</strong> {{ registro.recargo_nocturno|floatformat:2 }} h</li>
+    <li><strong>Recargo dominical:</strong> {{ registro.recargo_dominical|floatformat:2 }} h</li>
+    <li><strong>Recargo festivo:</strong> {{ registro.recargo_festivo|floatformat:2 }} h</li>
 </ul>
 
-<h3>Pago total: ${{ registro.pago_total }}</h3>
-<a href="{% url 'lista_registros' %}">Volver</a>
+<h3 class="mt-4">Pago total:</h3>
+<p class="fs-5 fw-bold text-success">
+    {{ registro.pago_total|floatformat:2|intcomma }} COP
+</p>
+
+<a href="{% url 'lista_registros' %}" class="btn btn-secondary mt-3">← Volver a la lista</a>
 {% endblock %}
