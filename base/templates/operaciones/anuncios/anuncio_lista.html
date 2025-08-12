@@ -28,11 +28,13 @@
                     <td>{{ anuncio.contenido }}</td>
                     <td>{{ anuncio.get_estado_display }}</td>
                     <td>
-                        <a href="{% url 'anuncio_editar' anuncio.id %}" class="btn btn-warning btn-sm">
-                            {% bs_icon 'pencil' %} Editar
+                        <a href="{% url 'anuncio_editar' anuncio.id %}" class="btn btn-primary btn-sm" 
+                           data-bs-toggle="tooltip" title="Editar anuncio">
+                            {% bs_icon 'pencil' %} 
                         </a>
-                        <a href="{% url 'anuncio_eliminar' anuncio.id %}" class="btn btn-danger btn-sm">
-                            {% bs_icon 'trash' %} Eliminar
+                        <a href="{% url 'anuncio_eliminar' anuncio.id %}" class="btn btn-danger btn-sm"
+                           data-bs-toggle="tooltip" title="Eliminar anuncio">
+                            {% bs_icon 'trash' %} 
                         </a>
                     </td>
                 </tr>

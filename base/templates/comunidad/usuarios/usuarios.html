@@ -46,7 +46,7 @@
             <th>Rol</th>
             <th>Tipo de Documento</th>
             <th>Documento</th>
-            {% if perms.comunidad.change_usuario %}
+            <!-- {% if perms.comunidad.change_usuario %} -->
             <th>Accion</th>
             {% endif %}
           </tr>
@@ -66,7 +66,7 @@
                 <td>{{ usuario.user.groups.first }}</td>
                 <td>{{ usuario.get_tipo_documento_display }}</td>
                 <td>{{ usuario.documento }}</td>
-                {% if perms.comunidad.change_usuario %}
+                <!-- {% if perms.comunidad.change_usuario %} -->
                 <td>
                   
                   <!-- Botón que abre el modal -->

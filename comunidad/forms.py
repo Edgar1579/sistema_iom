@@ -31,7 +31,6 @@ class UsuarioEditarForm(ModelForm):
         fields= "__all__"
         exclude=["estado","fecha_nacimiento", "documento","user"]
 
-
 class GroupForm(ModelForm):
     permissions = forms.ModelMultipleChoiceField(
         queryset=Permission.objects.all(),
@@ -40,7 +39,7 @@ class GroupForm(ModelForm):
     )
     class Meta:
         model = Group
-        fields = ['name','permissions'] 
+        fields = ['name','permissions']  
 
 class RegistroHorasForm(forms.ModelForm):
     numero_documento = forms.CharField(label="Número de Documento", required=False, disabled=True)

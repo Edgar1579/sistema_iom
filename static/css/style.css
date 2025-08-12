@@ -108,3 +108,39 @@ body.high-contrast a {
 .menu-contraste button:hover {
     background: #005177;
 }
+
+        .accessibility-tools {
+            position: fixed; /* Fija la barra en la pantalla */
+            right: 0; /* Alinea a la derecha */
+            top: 50%; /* Centra verticalmente */
+            transform: translateY(-50%); /* Ajusta para centrar */
+            background: #f1f1f1; /* Fondo de la barra */
+            padding: 10px; /* Espaciado interno */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Sombra para destacar */
+            z-index: 1000; /* Asegúrate de que esté por encima de otros elementos */
+        }
+        .accessibility-tools button {
+            display: block; /* Cada botón en una nueva línea */
+            margin: 5px 0; /* Espaciado entre botones */
+            padding: 5px 10px; /* Espaciado interno de los botones */
+            cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+        }
+        .high-contrast {
+            background: black !important;
+            color: white !important;
+        }
+        .negative-contrast {
+            background: black !important;
+            color: yellow !important;
+        }
+        .light-background {
+            background: white !important;
+            color: black !important;
+        }
+        .links-underline a {
+            text-decoration: underline !important;
+        }
+        .readable-font {
+            font-family: Arial, sans-serif !important;
+            font-size: 18px !important;
+        }

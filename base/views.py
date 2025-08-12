@@ -38,4 +38,4 @@ def principal_admin(request):
 
 def logout_user(request):
     logout(request)
-    return redirect('index') # Asegúrate de que 'index' sea una URL válida
+    return redirect('base') # Asegúrate de que 'index' sea una URL válida

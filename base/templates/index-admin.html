@@ -6,33 +6,42 @@
   <!-- Info boxes -->
   <div class="row">
     
-    <div class="col-12 col-sm-6 col-md-4">
-      <div class="info-box">
-        <span class="info-box-icon bg-info elevation-1">
-          {% bs_icon 'person' size='1.5em'%}</i></span>
+<div class="col-12 col-sm-6 col-md-4">
+  <div class="info-box">
+    <span class="info-box-icon bg-info elevation-1">
+      {% bs_icon 'person' size='1.5em' %}
+    </span>
 
-      <div class="info-box-content">
-          <span class="info-box-text">Usuarios</span>
-          <span class="info-box-number">{{ usuarios_cantidad }}</span>
-        </div>
-        <!-- /.info-box-content -->
-      </div>
-      <!-- /.info-box -->
+    <div class="info-box-content">
+      <a href="{% url 'usuarios' %}" class="nav-link">
+        <span class="info-box-text">Usuarios</span>
+        <span class="info-box-number">{{ usuarios_cantidad }}</span>
+      </a>
     </div>
+    <!-- /.info-box-content -->
+  </div>
+  <!-- /.info-box -->
+</div>
+
     <!-- /.col -->
   
-  <div class="col-12 col-sm-6 col-md-4">
-    <div class="info-box mb-3">
-      <span class="info-box-icon bg-danger elevation-1">{% bs_icon 'clock-history' size='1.5em'%}</span>
+ <div class="col-12 col-sm-6 col-md-4">
+  <div class="info-box mb-3">
+    <span class="info-box-icon bg-danger elevation-1">
+      {% bs_icon 'clock-history' size='1.5em' %}
+    </span>
 
-      <div class="info-box-content">
+    <div class="info-box-content">
+      <a href="{% url 'lista_registros' %}" class="nav-link">
         <span class="info-box-text">Horas registradas</span>
-        <span class="info-box-number">{{horas_cantidad}}</span>
-      </div>
-      <!-- /.info-box-content -->
+        <span class="info-box-number">{{ horas_cantidad }}</span>
+      </a>
     </div>
-    <!-- /.info-box -->
+    <!-- /.info-box-content -->
   </div>
+  <!-- /.info-box -->
+</div>
+
 </a>
 
     <!-- /.col -->
@@ -59,7 +68,11 @@
 </div>
 </div> 
 
-<!-- <script src="{% static 'ChartJS/chart.js' %}"></script> -->
+<script src="{% static 'ChartJS/chart.js' %}"></script>
 
 
+
+{% include 'partials/charts/charts.html' %}
+
+<canvas id="Chart-Usuarios" width="400" height="200"></canvas>
 {% endblock %}

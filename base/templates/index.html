@@ -60,8 +60,11 @@
  <!-- Botones centrados -->
     <div class="row">
        
-        <div class="col-md-9 offset-md-1">
-            <a href=" {% url 'panel_inicio' %}" class="btn btn-primary btn-lg">
+        <div class="col-md-10 offset-md-1" >
+          <a href="{% url 'panel_inicio' %}" class="btn btn-primary btn-lg" 
+               data-bs-toggle="tooltip" 
+               data-bs-placement="top" 
+               title="Acceder al panel para registrar horarios laborales y solicitar permisos">
                 Registrar Horarios y Solicitar Permisos
             </a>
         </div>
@@ -69,7 +72,9 @@
     </div>
 </div>
 
-  <h1>Anuncios</h1>
+  <div style="text-align: center;">
+    <h1>Anuncios</h1>
+</div>
     <!-- START THE FEATURETTES -->
     {% for anuncio in anuncios %}
     <hr class="featurette-divider" />
@@ -197,6 +202,7 @@
     <hr class="featurette-divider" /> -->
     <!-- /END THE FEATURETTES -->
   </div>
+  
 </main>
 
 {% endblock contenido %}
