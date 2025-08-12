@@ -112,34 +112,18 @@ class RegistroHoras(models.Model):
         # Lógica básica de división horaria
         hora_actual = entrada
         while hora_actual < salida:
-            siguiente = hora_actual + timedelta(hours=1)
-            if siguiente > salida:
-                siguiente = salida
-            hora = hora_actual.time()
-
-            # Clasificación de la hora
-            es_nocturna = hora < time(6, 0) or hora >= time(21, 0)
-            es_extra = (salida - entrada).total_seconds() / 3600 > 8
-            es_domingo = self.es_domingo()
-            es_festivo = self.es_festivo()
-
-            if es_domingo:
-                self.recargo_dominical += Decimal((siguiente - hora_actual).total_seconds() / 3600)
-            elif es_festivo:
-                self.recargo_festivo += Decimal((siguiente - hora_actual).total_seconds() / 3600)
-            elif es_extra:
-                if es_nocturna:
-                    self.horas_extras_nocturnas += Decimal((siguiente - hora_actual).total_seconds() / 3600)
-                else:
-                    self.horas_extras_diurnas += Decimal((siguiente - hora_actual).total_seconds() / 3600)
-            else:
-                if es_nocturna:
-                    self.horas_normales_nocturnas += Decimal((siguiente - hora_actual).total_seconds() / 3600)
-                    self.recargo_nocturno += Decimal((siguiente - hora_actual).total_seconds() / 3600)
-                else:
-                    self.horas_normales_diurnas += Decimal((siguiente - hora_actual).total_seconds() / 3600)
-
-            hora_actual = siguiente
+         siguiente = hora_actual + timedelta(hours=1)
+         if siguiente > salida:
+             siguiente = salida
+         hora = hora_actual.time()
+         es_nocturna = hora < time(6, 0) or hora >= time(19, 0)
+         if hora_actual.time() >= time(6, 0) and hora_actual.time() < time(19, 0):
+             self.horas_normales_diurnas += Decimal((siguiente - hora_actual).total_seconds() / 3600)
+         elif es_nocturna:
+             self.horas_extras_nocturnas += Decimal((siguiente - hora_actual).total_seconds() / 3600)
+         else:
+             self.horas_extras_diurnas += Decimal((siguiente - hora_actual).total_seconds() / 3600)
+         hora_actual = siguiente
 
     def calcular_pago_total(self):
         valor_hora = (self.SALARIO_MINIMO + self.AUXILIO_TRANSPORTE) / self.HORAS_TRABAJADAS_MES

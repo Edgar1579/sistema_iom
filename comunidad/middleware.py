@@ -1,4 +1,4 @@
-""" from django.shortcuts import redirect
+from django.shortcuts import redirect
 
 class AdminRequiredMiddleware:
     def __init__(self, get_response):
@@ -10,4 +10,4 @@ class AdminRequiredMiddleware:
                 return redirect('/')  # Redirige a la página de inicio
         response = self.get_response(request)
         return response
-    """
+   
