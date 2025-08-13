@@ -5,7 +5,6 @@ class SliderForm(ModelForm):
     class Meta:
         model= Slider
         fields= "__all__"
-        exclude=["estado",]
         widgets = {
             'prioridad': forms.NumberInput(attrs={'max': 9}),
         }
